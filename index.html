@@ -3,9 +3,262 @@
   <head>
     <meta charset="utf-8" />
     <title>Stevenson Math and CS</title>
+    <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      font-family:"Roboto", "Open Sans", sans-serif;
+    }
+
+    .hr {
+      height: 1px;
+      width: 100%;
+      background-color: black;
+    }
+
+    #head {
+      background: #303f9f;
+      color: white;
+      font-size: 2.5em;
+      letter-spacing: 1.5px;
+      padding: 100px;
+    }
+
+    #head .text {
+      max-width: 1000px;
+      margin: auto;
+    }
+
+    #content {
+      padding: 50px;
+    }
+
+    .section {
+      max-width: 1000px;
+      margin: auto;
+
+    }
+
+    .section .text {
+      margin-bottom: 8px;
+      color: #424242;
+    }
+
+    .section .hr {
+      background-color: #424242;
+    }
+
+    .courses {
+      display: flex;
+      flex-flow: row wrap;
+      width: 95%;
+      margin: auto;
+    }
+
+    .course {
+      margin: 20px 10px;
+      /*width: 30%;*/
+      flex-grow: 1;
+      background-color: white;
+      box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+      border-radius: 2px;
+      cursor: pointer;
+    }
+
+    .course .container {
+      margin: 20px 15px;
+    }
+
+    .course .text{
+      margin: 7px 0;
+      color: white;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .course .name {
+      font-size: 1.5em;
+    }
+
+    .course .hr {
+      margin: 0 auto;
+      background-color: white;
+    }
+
+    .course .teachers {
+      margin-top: 5px;
+      display: flex;
+      flex-flow: row wrap;
+      justify-content: center;
+      cursor: default;
+    }
+
+    .course .teachers .teacher {
+      border-radius: 25px;
+      background-color: white;
+      display: inline-block;
+      padding: 8px;
+      font-size: 13px;
+      opacity: .9;
+      margin: 5px;
+      color: #212121;
+      cursor: pointer;
+    }
+
+    .ripple-enabled {
+      cursor: pointer;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .ripple-gray .ripple {
+      background-color: gray;
+    }
+
+    .ripple {
+      background-color: white;
+      opacity: .4;
+      height: 8px;
+      width: 8px;
+      border-radius: 6px;
+      transition: transform .3s, opacity .3s;
+      position: absolute;
+    }
+
+    .red {
+      background-color: #F44336;
+    }
+    .purple {
+      background-color: #673AB7;
+    }
+    .blue {
+      background-color: #1E88E5;
+    }
+    .teal {
+      background-color: #009688;
+    }
+    .green {
+      background-color: #43A047;
+    }
+    .orange {
+      background-color: #F57C00;
+    }
+    </style>
   </head>
 
   <body>
-    
+    <div id="head">
+      <div class="text">Stevenson Math and Computer Science</div>
+    </div>
+
+    <div id="content">
+
+      <div class="section">
+
+        <div class="text">Courses</div>
+        <div class="hr"></div>
+        <div class="courses">
+
+          <div class="course orange ripple-enabled">
+            <div class="container">
+              <div class="text name">Geometry Honors</div>
+              <div class="text duration">Full Year</div>
+              <div class="text grades">Grades: 9-10</div>
+              <div class="text prequisite">Prequisites: Algebra 2</div>
+              <div class="hr"></div>
+              <div class="teachers">
+                <div class="teacher ripple-enabled ripple-gray">Thibaudeau</div>
+                <div class="teacher ripple-enabled ripple-gray">Habel</div>
+              </div>
+            </div>
+          </div>
+
+          <div class="course blue ripple-enabled">
+            <div class="container">
+              <div class="text name">Pre-Calc Honors</div>
+              <div class="text duration">Full Year</div>
+              <div class="text grades">Grades: 10-11</div>
+              <div class="text prequisite">Prequisites: Geometry Honors</div>
+              <div class="hr"></div>
+              <div class="teachers">
+                <div class="teacher"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="course red ripple-enabled">
+            <div class="container">
+              <div class="text name">AP Calculus AB</div>
+              <div class="text duration">Full Year</div>
+              <div class="text grades">Grades: 11-12</div>
+              <div class="text prequisite">Prequisites: Pre-Calc</div>
+              <div class="hr"></div>
+              <div class="teachers">
+                <div class="teacher"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="course green">
+            <div class="container">
+              <div class="text name">AP Calculus BC</div>
+              <div class="text duration">Full Year</div>
+              <div class="text grades">Grades: 11-12</div>
+              <div class="text prequisite">Prequisites: Pre-Calc Honors</div>
+              <div class="hr"></div>
+              <div class="teachers">
+                <div class="teacher"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="course purple ripple-enabled">
+            <div class="container">
+              <div class="text name">AP Calculus BC</div>
+              <div class="text duration">Full Year</div>
+              <div class="text grades">Grades: 11-12</div>
+              <div class="text prequisite">Prequisites: Pre-Calc Honors</div>
+              <div class="hr"></div>
+              <div class="teachers">
+                <div class="teacher"></div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+    </div>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script>
+    const rippleCircle = $('<div class="ripple"></div>');
+
+    $('.ripple-enabled').click(function(e) {
+      // Mouse x and y relative to the element clicked on
+      var relX = e.pageX - $(this).offset().left;
+      var relY = e.pageY - $(this).offset().top;
+
+      // Clones rippleCircle to ensure that a new copy is being used for each click
+      var ripple = rippleCircle.clone();
+
+      // Adds ripple to clicked element and sets position to click location
+      $(this).append(ripple);
+      ripple.css({left: relX, top: relY});
+
+      // Gets length of twice the diagonal in order for ripple to cover all of the element even if mouse click
+      // is in a corner and then divides by ripple's diameter to get appropriate scale amount
+      var scaleAmount = Math.sqrt(Math.pow($(this).outerHeight(), 2) + Math.pow($(this).outerWidth(), 2)) * 2 / ripple.width();
+      ripple.css({'transform': 'scale(' + scaleAmount + ')', 'opacity': .2});
+
+      // Removes ripple after 300 milliseconds
+      setTimeout(function() {
+        ripple.remove();
+      }, 300);
+    });
+
+    $('.course .teachers .teacher').click(function(e){
+      e.stopPropagation();
+    });
+    </script>
   </body>
 </html>
