@@ -17,8 +17,11 @@
       background-color: black;
     }
 
+    .templates {
+      display: none;
+    }
+
     #head {
-      background: #303f9f;
       color: white;
       font-size: 2.5em;
       letter-spacing: 1.5px;
@@ -126,6 +129,9 @@
       position: absolute;
     }
 
+    .indigo {
+      background-color: #303f9f;
+    }
     .red {
       background-color: #F44336;
     }
@@ -148,106 +154,87 @@
   </head>
 
   <body>
+    <div class="templates">
+      <div class="ripple"></div>
+
+      <div class="section">
+        <div class="text"></div>
+        <div class="hr"></div>
+      </div>
+
+      <div class="course ripple-enabled">
+        <div class="container">
+          <div class="text name"></div>
+          <div class="text duration"></div>
+          <div class="text grades"></div>
+          <div class="text prerequisites"></div>
+          <div class="hr"></div>
+          <div class="teachers">
+          </div>
+        </div>
+      </div>
+
+      <div class="teacher ripple-enabled ripple-gray"></div>
+    </div>
+
     <div id="head">
-      <div class="text">Stevenson Math and Computer Science</div>
+      <div class="text"></div>
     </div>
 
     <div id="content">
-
-      <div class="section">
-
-        <div class="text">Courses</div>
-        <div class="hr"></div>
-        <div class="courses">
-
-          <div class="course orange ripple-enabled" href="geometry">
-            <div class="container">
-              <div class="text name">Geometry Honors</div>
-              <div class="text duration">Full Year</div>
-              <div class="text grades">Grades: 9-10</div>
-              <div class="text prerequisite">Prerequisites: Algebra 2</div>
-              <div class="hr"></div>
-              <div class="teachers">
-                <div class="teacher ripple-enabled ripple-gray">Thibaudeau</div>
-                <div class="teacher ripple-enabled ripple-gray">Habel</div>
-              </div>
-            </div>
-          </div>
-
-          <div class="course blue ripple-enabled">
-            <div class="container">
-              <div class="text name">Pre-Calc Honors</div>
-              <div class="text duration">Full Year</div>
-              <div class="text grades">Grades: 10-11</div>
-              <div class="text prerequisite">Prerequisites: Geometry Honors</div>
-              <div class="hr"></div>
-              <div class="teachers">
-                <div class="teacher"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="course red ripple-enabled">
-            <div class="container">
-              <div class="text name">AP Calculus AB</div>
-              <div class="text duration">Full Year</div>
-              <div class="text grades">Grades: 11-12</div>
-              <div class="text prerequisite">Prerequisites: Pre-Calc</div>
-              <div class="hr"></div>
-              <div class="teachers">
-                <div class="teacher"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="course green">
-            <div class="container">
-              <div class="text name">AP Calculus BC</div>
-              <div class="text duration">Full Year</div>
-              <div class="text grades">Grades: 11-12</div>
-              <div class="text prerequisite">Prerequisites: Pre-Calc Honors</div>
-              <div class="hr"></div>
-              <div class="teachers">
-                <div class="teacher"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="course purple ripple-enabled">
-            <div class="container">
-              <div class="text name">AP Computer Science Principles</div>
-              <div class="text duration">Full Year</div>
-              <div class="text grades">Grades: 10-11-12</div>
-              <div class="text prerequisite">Prerequisites: Algebra 2</div>
-              <div class="hr"></div>
-              <div class="teachers">
-                <div class="teacher"></div>
-              </div>
-            </div>
-          </div>
-
-          <div class="course teal ripple-enabled">
-            <div class="container">
-              <div class="text name">Computer Programming</div>
-              <div class="text duration">Full Year</div>
-              <div class="text grades">Grades: 9-10-11-12</div>
-              <div class="text prererequisite">Prerequisites: Algebra 1</div>
-              <div class="hr"></div>
-              <div class="teachers">
-                <div class="teacher"></div>
-              </div>
-            </div>
-          </div>
-
-        </div>
-      </div>
     </div>
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/velocity/1.5.0/velocity.min.js"></script>
+
     <script>
     const constants = {
-      rippleCircle: $('<div class="ripple"></div>'),
+      title: 'Stevenson Math and Computer Science',
+      color: 'indigo',
+      courseColors: ['orange', 'blue', 'red', 'green', 'purple', 'teal'],
+      courses: [{
+        href: '#/geometry',
+        name: 'Geometry Honors',
+        duration: 'Full Year',
+        grades: 'Grades: 9-10',
+        prerequisites: 'Prerequisites: Algebra 2',
+        teachers: ['Thibaudeau', 'Habel']
+      }, {
+        href: '#/precalc',
+        name: 'Pre-Calc Honors',
+        duration: 'Full Year',
+        grades: 'Grades 10-11',
+        prerequisites: 'Prerequisites: Geometry Honors',
+        teachers: ['Kim', 'Royce']
+      }, {
+        href: '#/calcab',
+        name: 'AP Calculus AB',
+        duration: 'Full Year',
+        grades: 'Grades 11-12',
+        prerequisites: 'Prerequisites: Pre-Calc',
+        teachers: []
+      }, {
+        href: '#/calcbc',
+        name: 'AP Calculus BC',
+        duration: 'Full Year',
+        grades: 'Grades 11-12',
+        prerequisites: 'Prerequisites: Pre-Calc Honors',
+        teachers: ['Thibaudeau', 'Gammelgaard', 'Wiersema']
+      }, {
+        href: '#/apcsp',
+        name: 'AP Computer Science Principles',
+        duration: 'Full Year',
+        grades: 'Grades 10-11-12',
+        prerequisites: 'Prerequisites: Algebra 1',
+        teachers: ['Svetlik', 'Zietlow']
+      }, {
+        href: '#/programming',
+        name: 'Computer Programming',
+        duration: 'Full Year',
+        grades: 'Grades 9-10-11-12',
+        prerequisites: 'Prerequisites: Algebra 1',
+        teachers: ['Sikora']
+      }],
       animations: {
         ripple: {
           duration: 300
@@ -270,126 +257,207 @@
       }
     }
 
-    $('.ripple-enabled').click(function(e) {
-      // mouse x and y relative to the clicked element instead of the page
-      var relX = e.pageX - $(this).offset().left;
-      var relY = e.pageY - $(this).offset().top;
-
-      // clones rippleCircle to ensure that a new copy is being used for each click
-      var ripple = constants.rippleCircle.clone();
-
-      // adds ripple to clicked element and sets position to click location
-      $(this).append(ripple);
-      ripple.css({left: relX, top: relY});
-
-      // gets length of twice the diagonal in order for ripple to cover all of the element even if mouse click
-      // is in a corner and then divides by ripple's diameter to get appropriate scale amount
-      var scaleAmount = Math.sqrt(Math.pow($(this).outerHeight(), 2) + Math.pow($(this).outerWidth(), 2)) * 2 / ripple.width();
-      ripple.css({'transform': 'scale(' + scaleAmount + ')', 'opacity': .2});
-
-      // removes ripple after 300 milliseconds
-      setTimeout(function() {
-        ripple.remove();
-      }, constants.animations.ripple.duration);
+    // calls the function load when page is ready
+    $(function() {
+      load();
     });
 
-    $('.course .teachers .teacher').click(function(e){
-      // stop propagation prevents the event from firing on .course
-      e.stopPropagation();
+    // popstate is fired when window's history changes (when back/forward is clicked or when location.href is set)
+    // necessary since browser doesn't automatically reload when hash part of url changes
+    $(window).on('popstate', function (e) {
+      load();
     });
 
-    $('.course').click(function() {
-      var $course = $(this);
-      const params = constants.animations.course;
+    function load(page) {
+      //if page is not specified, sets page to location.hash
+      page = page || location.hash;
 
-      // hides everything else on page while ripples occur
-      $('.section > *:not(.courses), .course').not($course).velocity({
-        opacity: 0
-      }, params.delay);
+      //Removes everything in #content and all color classes for header
+      $('#content > *').remove();
+      $('#head').removeClass();
 
-      // waits until ripples are mostly done before starting animation
-      setTimeout(function() {
-        // necessary css for animation
-        $course.css({
-          'z-index': 1, // to ensure that this element stays in front of everything else during animation
-          position: 'absolute', // to allow element to move beyond bounds of parent
-          top: $course.offset().top,
-          left: $course.offset().left,
-          margin: 0
-        });
+      var loader = false;
+      constants.courses.forEach(function(course, index) {
+        if(course.href === page) {
+          loader = loadCourse;
+          page = index; //page is set to index to make it easier for loadCourse to find the requested course
+        }
+      });
+      if(!loader) {
+        loader = loadHome;
+      }
+      loader(page);
 
-        // animates course to the center of the header
-        $course.velocity({
-          left: [window.innerWidth/2 - $course.width()/2, 'easeOutSine'], // easeOutSine and easeInSine used for curved animation path
-          top: [$('#head').outerHeight()/2 - $course.height()/2, 'easeInSine']
-        }, params.duration1);
+      // the click listener needs to be attached after page is loaded
+      $('.ripple-enabled').click(function(e) {
+        // mouse x and y relative to the clicked element instead of the page
+        var relX = e.pageX - $(this).offset().left;
+        var relY = e.pageY - $(this).offset().top;
 
-        // hides all elements in the course except for the name during the movement animation
-        $course.find(":not(.container, .name)").velocity({
-          opacity: 0
-        }, {
-          duration: params.duration1,
-          complete: function() {
-            $course.find(":not(.container, .name)").remove();
-          }
-        });
+        // clones ripple to ensure that a new copy is being used for each click
+        var ripple = $(".templates").children(".ripple").clone();
 
-        // css to ensure that .name looks identical to the text in the header after animation
-        $course.find('.name').css({
-          textAlign: 'left',
-          margin: 0
-        });
+        // adds ripple to clicked element and sets position to click location
+        $(this).append(ripple);
+        ripple.css({left: relX, top: relY});
 
-        // waits until first animation (movement to the center of the header) is complete
+        // gets length of twice the diagonal in order for ripple to cover all of the element even if mouse click
+        // is in a corner and then divides by ripple's diameter to get appropriate scale amount
+        var scaleAmount = Math.sqrt(Math.pow($(this).outerHeight(), 2) + Math.pow($(this).outerWidth(), 2)) * 2 / ripple.width();
+        ripple.css({'transform': 'scale(' + scaleAmount + ')', 'opacity': .2});
+
+        // removes ripple after 300 milliseconds
         setTimeout(function() {
-          // more css to ensure course looks like the header after animation
+          ripple.remove();
+        }, constants.animations.ripple.duration);
+      });
+    }
+
+    function loadHome() {
+      $('#head').addClass(constants.color);
+      $("#head .text").text(constants.title);
+
+      $('#content').css('display', 'none');
+      $('#content').append($('.templates').children('.section').clone());
+      $('#content > .section').append('<div class="courses"></div>')
+      $('#content > .section').children('.text').text('Courses');
+
+      constants.courses.forEach(function(course, index) {
+        $course = $(".templates").children('.course').clone();
+        $course.attr('href', course.href);
+        $course.addClass(constants.courseColors[index % constants.courseColors.length]);
+
+        // sets all children with the same class name as a property in course to the text in course
+        for(var property in course) {
+          $course.find('.' + property).text(course[property]);
+        }
+
+        // need to clear text of .teacher because previous statement unintentionally sets text of .teacher
+        $course.find('.teachers').text('');
+
+        // adds all the teachers using teacher template
+        course.teachers.forEach(function(teacher) {
+          $course.find('.teachers').append($('.templates').children('.teacher').clone().text(teacher));
+        });
+
+        $('.courses').append($course);
+      });
+      $('#content').css('display', '');
+
+      $('.course .teachers .teacher').click(function(e){
+        // stop propagation prevents the event from firing on .course
+        e.stopPropagation();
+      });
+
+      // animation for going to a course page
+      $('.courses .course').click(function() {
+        var $course = $(this);
+        const params = constants.animations.course;
+
+        // hides everything else on page while ripples occur
+        $('.section > *:not(.courses), .courses .course').not($course).velocity({
+          opacity: 0
+        }, params.delay);
+
+        // waits until ripples are mostly done before starting animation
+        setTimeout(function() {
+          // necessary css for animation
           $course.css({
-            boxShadow: 'none',
-            paddingTop: 100,
-            paddingBottom: 100,
-            borderRadius: 0
-          });
-          $course.children('.container').css({
-            margin: 'auto',
-            maxWidth: 1000
+            'z-index': 1, // to ensure that this element stays in front of everything else during animation
+            position: 'absolute', // to allow element to move beyond bounds of parent
+            top: $course.offset().top,
+            left: $course.offset().left,
+            margin: 0
           });
 
-          // animates width of course to header width
+          // animates course to the center of the header
           $course.velocity({
-            width: window.innerWidth - 200, // -200 is to exclude the padding on the sides
-            left: 0
-          }, {duration: params.duration2, queue: false}); // queue:false allows subsequent animations without waiting for this to complete
+            left: [window.innerWidth/2 - $course.width()/2, 'easeOutSine'], // easeOutSine and easeInSine used for curved animation path
+            top: [$('#head').outerHeight()/2 - $course.height()/2, 'easeInSine']
+          }, params.duration1);
 
-          // animates size of .name to size of text in header
-          $course.find('.name').velocity({
-            fontSize: '2.5em'
-          }, {duration: params.duration2, queue: false});
+          // hides all elements in the course except for the name during the movement animation
+          $course.find(":not(.container, .name)").velocity({
+            opacity: 0
+          }, {
+            duration: params.duration1,
+            complete: function() {
+              $course.find(":not(.container, .name)").remove();
+            }
+          });
 
-          // animates height of course to header height after a slight delay (the delay slightly enhances the overall look)
-          $course.delay(params.offset2).velocity({
-            height: $('#head').height(),
-            paddingLeft: 100,
-            paddingRight: 100,
-            top: 0
-          }, params.duration2);
+          // css to ensure that .name looks identical to the text in the header after animation
+          $course.find('.name').css({
+            textAlign: 'left',
+            margin: 0,
+            letterSpacing: 1.5
+          });
 
+          // waits until first animation (movement to the center of the header) is complete
           setTimeout(function() {
-            // sets header to color and name of course in the background
-            $('#head').css('background-color', $course.css('background-color'));
-            $('#head .text').text($course.find('.name').text());
+            // more css to ensure course looks like the header after animation
+            $course.css({
+              boxShadow: 'none',
+              paddingTop: 100,
+              paddingBottom: 100,
+              borderRadius: 0
+            });
+            $course.children('.container').css({
+              margin: 'auto',
+              maxWidth: 1000
+            });
 
-            //final adjustment of height if necessary (only when new text uses a different number of lines than old)
+            // animates width of course to header width
             $course.velocity({
-              height: $("#head").height()
-            }, params.duration3);
+              width: window.innerWidth - 200, // -200 is to exclude the padding on the sides
+              left: 0
+            }, {duration: params.duration2, queue: false}); // queue:false allows subsequent animations without waiting for this to complete
 
-          }, params.duration2 + params.offset2);
-        }, params.duration1);
-      }, params.delay);
+            // animates size of .name to size of text in header
+            $course.find('.name').velocity({
+              fontSize: '2.5em'
+            }, {duration: params.duration2, queue: false});
 
-      $('html, body').animate({scrollTop: 0}, params.delay + params.duration1);
-      location.href = location.origin + '#/' + $(this).attr('href');
-    });
+            // animates height of course to header height after a slight delay (the delay slightly enhances the overall look)
+            $course.delay(params.offset2).velocity({
+              height: $('#head').height(),
+              paddingLeft: 100,
+              paddingRight: 100,
+              top: 0
+            }, params.duration2);
+
+            setTimeout(function() {
+              // sets header title to name of course in the background in order to calculate new size of header
+              $('#head .text').text($course.find('.name').text());
+
+              //final adjustment of height if necessary (only when new text uses a different number of lines than old)
+              $course.velocity({
+                height: $("#head").height()
+              }, {
+                duration: params.duration3,
+                complete: function() {
+                  $course.remove();
+
+                  // points URL to selected course's page
+                  location.href = location.origin + location.pathname + $(this).attr('href');
+                }
+              });
+
+            }, params.duration2 + params.offset2);
+          }, params.duration1);
+        }, params.delay);
+
+        // scrolls to top of page while ripples and movement happen but before size of course changes to fill header
+        $('html, body').animate({
+          scrollTop: 0
+        }, params.delay + params.duration1);
+      });
+    }
+
+    function loadCourse(courseIndex) {
+      $('#head').addClass(constants.courseColors[courseIndex]);
+      $('#head .text').text(constants.courses[courseIndex].name);
+    }
 
     function log() { // temporary, for development purposes
       console.log(Array.from(arguments).reduce((str, item) => str + item + ' ', ''));
