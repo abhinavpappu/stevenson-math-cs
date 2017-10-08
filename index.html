@@ -41,27 +41,13 @@
       position: absolute;
     }
 
-    .indigo {
-      background-color: #303f9f;
-    }
-    .red {
-      background-color: #F44336;
-    }
-    .purple {
-      background-color: #673AB7;
-    }
-    .blue {
-      background-color: #1E88E5;
-    }
-    .teal {
-      background-color: #009688;
-    }
-    .green {
-      background-color: #43A047;
-    }
-    .orange {
-      background-color: #F57C00;
-    }
+    .indigo {background-color: #303f9f}
+    .red {background-color: #F44336}
+    .purple {background-color: #673AB7}
+    .blue {background-color: #1E88E5}
+    .teal {background-color: #009688}
+    .green {background-color: #43A047}
+    .orange {background-color: #F57C00}
 
     #head {
       padding: 100px;
@@ -74,7 +60,60 @@
       font-size: 2.5em;
       letter-spacing: 1.5px;
       color: white;
-      /*font-weight: bold;*/
+    }
+
+    #loading-bar {
+      position: relative;
+      overflow: hidden;
+      display: none;
+    }
+
+    #loading-bar > .bg1 {
+      background-color: white;
+      height: 5px;
+    }
+
+    #loading-bar > .bg2 {
+      position: absolute;
+      top: 0;
+      opacity: .5;
+      width: 100%;
+      height: 5px;
+      background-color: inherit;
+    }
+
+    #loading-bar > .bar {
+      position: absolute;
+      top: 0;
+      height: 5px;
+      width: 100%;
+      background-color: inherit;
+    }
+
+    .loading-bar-animation {
+      animation: 2s infinite infinite-loading;
+    }
+
+    @keyframes infinite-loading {
+      0% {
+        width: 25%;
+        left: -25%;
+      }
+      40% {
+        width: 75%;
+        left: 60%;
+      }
+      60% {
+        width: 75%;
+        left: 100%;
+      }
+      60.1% {
+        left: -75%;
+      }
+      100% {
+        left: 100%;
+        width: 25%;
+      }
     }
 
     /* Everything that would be inside homepage must be explicitly declared as a descendant of .homepage
@@ -185,6 +224,12 @@
       <div class="text"></div>
     </div>
 
+    <div id="loading-bar" class="indigo">
+      <div class="bg1"></div>
+      <div class="bg2"></div>
+      <div class="bar"></div>
+    </div>
+
     <div id="content">
     </div>
 
@@ -211,35 +256,35 @@
         href: '#/precalc',
         name: 'Pre-Calc Honors',
         duration: 'Full Year',
-        grades: 'Grades 10-11',
+        grades: 'Grades: 10-11',
         prerequisites: 'Prerequisites: Geometry Honors',
         teachers: ['Kim', 'Royce']
       }, {
         href: '#/calcab',
         name: 'AP Calculus AB',
         duration: 'Full Year',
-        grades: 'Grades 11-12',
+        grades: 'Grades: 11-12',
         prerequisites: 'Prerequisites: Pre-Calc',
         teachers: []
       }, {
         href: '#/calcbc',
         name: 'AP Calculus BC',
         duration: 'Full Year',
-        grades: 'Grades 11-12',
+        grades: 'Grades: 11-12',
         prerequisites: 'Prerequisites: Pre-Calc Honors',
         teachers: ['Thibaudeau', 'Gammelgaard', 'Wiersema']
       }, {
         href: '#/apcsp',
         name: 'AP Computer Science Principles',
         duration: 'Full Year',
-        grades: 'Grades 10-11-12',
+        grades: 'Grades: 10-11-12',
         prerequisites: 'Prerequisites: Algebra 1',
         teachers: ['Svetlik', 'Zietlow']
       }, {
         href: '#/programming',
         name: 'Computer Programming',
         duration: 'Full Year',
-        grades: 'Grades 9-10-11-12',
+        grades: 'Grades: 9-10-11-12',
         prerequisites: 'Prerequisites: Algebra 1',
         teachers: ['Sikora']
       }],
@@ -268,12 +313,22 @@
     // loads homepage whenever #head is clicked
     $("#head").click(function() {
       location.href = location.origin + location.pathname;
-    })
+    });
 
     // calls the function load when page is ready
     $(function() {
       load();
     });
+
+    function loadingBar(show) {
+      if(show) {
+        $('#loading-bar').css('display', 'block');
+        $('#loading-bar > .bar').addClass('loading-bar-animation');
+      } else {
+        $('#loading-bar > .bar').removeClass('loading-bar-animation');
+        $('#loading-bar').css('display', '');
+      }
+    }
 
     // popstate is fired when window's history changes (when back/forward is clicked or when location.href is set)
     // necessary since browser doesn't automatically reload when hash part of url changes
@@ -288,6 +343,7 @@
       //Removes everything in #content and all color classes for header
       $('#content > *').remove();
       $('#head').removeClass();
+      $('#loading-bar').removeClass();
 
       var loader = false;
       constants.courses.forEach(function(course, index) {
@@ -331,7 +387,8 @@
       // TODO: Load from seperate file
 
       $('#head').addClass(constants.color);
-      $("#head .text").text(constants.title);
+      $('#head .text').text(constants.title);
+      $('#loading-bar').addClass(constants.color);
 
       $('#content').append('<div class="homepage"></div>');
       $('.homepage').css('display', 'none');
@@ -472,12 +529,16 @@
     }
 
     function loadCourse(courseIndex) {
-      $('#head').addClass(constants.courseColors[courseIndex]);
+      $('#head').addClass(constants.courseColors[courseIndex % constants.courseColors.length]);
       $('#head .text').text(constants.courses[courseIndex].name);
+      $('#loading-bar').addClass(constants.courseColors[courseIndex % constants.courseColors.length]);
 
+      loadingBar(true);
       // asynchronously loads courses.html into #content
       // ?a=Date.now is to make sure browse gets latest version of courses.html instead of cached version
-      $("#content").load('courses.html?a=' + Date.now());
+      $("#content").load('courses.html?a=' + Date.now(), function() {
+        loadingBar(false);
+      });
     }
 
     function log() { // temporary, for development purposes
