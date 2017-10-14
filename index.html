@@ -48,6 +48,13 @@
     .teal {background-color: #009688}
     .green {background-color: #43A047}
     .orange {background-color: #F57C00}
+    .indigo-text {color: #303f9f}
+    .red-text {color: #F44336}
+    .purple-text {color: #673AB7}
+    .blue-text {color: #1E88E5}
+    .teal-text {color: #009688}
+    .green-text {color: #43A047}
+    .orange-text {color: #F57C00}
 
     #head {
       padding: 100px;
@@ -66,53 +73,100 @@
       position: relative;
       overflow: hidden;
       display: none;
-    }
-
-    #loading-bar > .bg1 {
-      background-color: white;
       height: 5px;
+      width: 100%;
     }
 
-    #loading-bar > .bg2 {
+    #loading-bar .bg, #loading-bar .bar-container, #loading-bar .bar{
       position: absolute;
-      top: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    #loading-bar .bg {
       opacity: .5;
-      width: 100%;
-      height: 5px;
-      background-color: inherit;
     }
 
-    #loading-bar > .bar {
-      position: absolute;
-      top: 0;
-      height: 5px;
-      width: 100%;
-      background-color: inherit;
+    #loading-bar .bar-container.first{
+      left: -55%;
     }
 
-    .loading-bar-animation {
-      animation: 2s infinite infinite-loading;
+    #loading-bar .bar-container.second {
+      left: -145%;
     }
 
-    @keyframes infinite-loading {
+    .loading-translate-1 {animation: translate-1 2s infinite linear}
+    .loading-translate-2 {animation: translate-2 2s infinite linear}
+    .loading-scale-1 {animation: scale-1 2s infinite linear}
+    .loading-scale-2 {animation: scale-2 2s infinite linear}
+
+    @keyframes translate-1 {
       0% {
-        width: 25%;
-        left: -25%;
+        animation-timing-function: cubic-bezier(.15, 0, .515, .41);
+        transform: translateX(0)
       }
-      40% {
-        width: 75%;
-        left: 60%;
+      25% {
+        animation-timing-function: cubic-bezier(.31, .284, .8, .734);
+        transform: translateX(38%)
       }
-      60% {
-        width: 75%;
-        left: 100%;
-      }
-      60.1% {
-        left: -75%;
+      48.35% {
+        animation-timing-function: cubic-bezier(.4, .627, .6, .902);
+        transform: translateX(84%)
       }
       100% {
-        left: 100%;
-        width: 25%;
+        transform: translateX(160%)
+      }
+    }
+
+    @keyframes translate-2 {
+      0% {
+        transform: translateX(0)
+      }
+      20% {
+        animation-timing-function: cubic-bezier(.5, 0, .702, .496);
+        transform: translateX(0)
+      }
+      59.15% {
+        animation-timing-function: cubic-bezier(.302, .381, .55, .956);
+        transform: translateX(84%)
+      }
+      100% {
+        transform: translateX(200%)
+      }
+    }
+
+    @keyframes scale-1 {
+      0% {
+        animation-timing-function: cubic-bezier(.15, 0, .515, .41);
+        transform: scaleX(.08)
+      }
+      19.15% {
+        animation-timing-function: cubic-bezier(.31, .284, .8, .734);
+        transform: scaleX(.457)
+      }
+      44.15% {
+        animation-timing-function: cubic-bezier(.4, .627, .6, .902);
+        transform: scaleX(.728)
+      }
+      100% {
+        transform: scaleX(.08)
+      }
+    }
+
+    @keyframes scale-2 {
+      0% {
+        transform: scaleX(.08)
+      }
+      36.65% {
+        animation-timing-function: cubic-bezier(.335, .125, .785, 1);
+        transform: scaleX(.08)
+      }
+      69.15% {
+        animation-timing-function: cubic-bezier(.06, .11, .6, 1);
+        transform: scaleX(.661)
+      }
+      100% {
+        transform: scaleX(.08)
       }
     }
 
@@ -225,9 +279,9 @@
     </div>
 
     <div id="loading-bar" class="indigo">
-      <div class="bg1"></div>
-      <div class="bg2"></div>
-      <div class="bar"></div>
+      <div class="bg"></div>
+      <div class="bar-container first"><div class="bar"></div></div>
+      <div class="bar-container second"><div class="bar"></div></div>
     </div>
 
     <div id="content">
@@ -301,6 +355,10 @@
         }
       }
     }
+    // initialize course colors
+    constants.courses.forEach(function(course, index) {
+      course.color = constants.courseColors[index % constants.courseColors.length];
+    });
 
     function slowDownAnimations(amount = 10) { // temporary, for development purposes
       for(var a in constants.animations) {
@@ -320,12 +378,21 @@
       load();
     });
 
-    function loadingBar(show) {
+    function loadingBar(show, color) {
+      if(color) {
+        $('#loading-bar .bg, #loading-bar .bar').addClass(color);
+      }
       if(show) {
         $('#loading-bar').css('display', 'block');
-        $('#loading-bar > .bar').addClass('loading-bar-animation');
+        $('#loading-bar .bar-container.first').addClass('loading-translate-1');
+        $('#loading-bar .bar-container.second').addClass('loading-translate-2');
+        $('#loading-bar .first .bar').addClass('loading-scale-1');
+        $('#loading-bar .second .bar').addClass('loading-scale-2');
       } else {
-        $('#loading-bar > .bar').removeClass('loading-bar-animation');
+        $('#loading-bar .bar-container.first').removeClass('loading-translate-1');
+        $('#loading-bar .bar-container.second').removeClass('loading-translate-2');
+        $('#loading-bar .first .bar').removeClass('loading-scale-1');
+        $('#loading-bar .second .bar').removeClass('loading-scale-2');
         $('#loading-bar').css('display', '');
       }
     }
@@ -346,10 +413,10 @@
       $('#loading-bar').removeClass();
 
       var loader = false;
-      constants.courses.forEach(function(course, index) {
+      constants.courses.forEach(function(course) {
         if(course.href === page) {
           loader = loadCourse; // sets the loader function to the loader for a course page
-          page = index; //page is set to index to make it easier for loadCourse to find the requested course
+          page = course; //sets page to course object so loadCourse doesn't have to refind it
         }
       });
       // if the loader for a page isn't found, defaults to loading the home page
@@ -388,7 +455,7 @@
 
       $('#head').addClass(constants.color);
       $('#head .text').text(constants.title);
-      $('#loading-bar').addClass(constants.color);
+      loadingBar(false, constants.color);
 
       $('#content').append('<div class="homepage"></div>');
       $('.homepage').css('display', 'none');
@@ -528,15 +595,15 @@
       });
     }
 
-    function loadCourse(courseIndex) {
-      $('#head').addClass(constants.courseColors[courseIndex % constants.courseColors.length]);
-      $('#head .text').text(constants.courses[courseIndex].name);
-      $('#loading-bar').addClass(constants.courseColors[courseIndex % constants.courseColors.length]);
+    function loadCourse(course) {
+      $('#head').addClass(course.color);
+      $('#head .text').text(course.name);
 
-      loadingBar(true);
+      loadingBar(true, course.color);
       // asynchronously loads courses.html into #content
       // ?a=Date.now is to make sure browse gets latest version of courses.html instead of cached version
       $("#content").load('courses.html?a=' + Date.now(), function() {
+        initializeCourse(course);
         loadingBar(false);
       });
     }
