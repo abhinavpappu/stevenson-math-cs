@@ -1,0 +1,9 @@
+{
+  "blocks": [
+    {
+      "type": "normal",
+      "title": "Overview",
+      "text": "This full year course introduces students to computer programming and computational thinking with an emphasis on problem solving. Students will learn how to read and program code in Python and Java programming languages. The course introduces students to writing programs that make decisions using conditional statements and iteration through the use of looping structures. By the end of the year, students will be able to produce their own unique and creative game(s), which may include animation, importing pictures, and sound. Projects include interactive programs with keyboard and/or mouse inputs that display text and/or graphics. Students cannot earn credit in CSC151/152 and Computer Programming Accelerated (CSC171/172). "
+    }
+  ]
+}

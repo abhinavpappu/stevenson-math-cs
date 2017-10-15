@@ -1,0 +1,47 @@
+<style>
+/* Everything that would be inside coursepage must be explicitly declared as a
+  descendant of .coursepage just in case other pages use the same classes */
+
+.coursepage {
+  padding: 50px 100px;
+  display: none; /*will show using javascript after everything is initialized*/
+}
+
+.coursepage > .block {
+  max-width: 1000px;
+  margin: auto;
+}
+
+.coursepage .title {
+  font-size: 2em;
+  margin-bottom: 20px;
+}
+
+.coursepage .text {
+  line-height: 1.5;
+}
+</style>
+
+<div class="templates">
+  <div class="block">
+    <div class="title"></div>
+    <div class="text"></div>
+  </div>
+</div>
+
+<!-- Initially hidden, will be displayed after everything is initialized-->
+<div class="coursepage hide">
+</div>
+
+<script>
+function initializeCourse(courseData) {
+  courseData.blocks.forEach(function(block) {
+    $block = $('.templates > .block').clone();
+    $block.children('.title').text(block.title).addClass(courseData.color + '-text');
+    $block.children('.text').text(block.text);
+    $('.coursepage').append($block);
+  });
+
+  $('.coursepage').css('display', 'block');
+}
+</script>

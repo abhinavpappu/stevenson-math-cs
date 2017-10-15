@@ -1,0 +1,304 @@
+<script>
+constants.homepage = {
+  courses: [{
+    href: '#/geometry-honors',
+    duration: 'Full Year',
+    grades: 'Grades: 9-10',
+    prerequisites: 'Prerequisites: Algebra 2',
+    teachers: ['Thibaudeau', 'Habel']
+  }, {
+    href: '#/precalc-honors',
+    duration: 'Full Year',
+    grades: 'Grades: 10-11',
+    prerequisites: 'Prerequisites: Geometry Honors',
+    teachers: ['Kim', 'Royce']
+  }, {
+    href: '#/calc-ab',
+    duration: 'Full Year',
+    grades: 'Grades: 11-12',
+    prerequisites: 'Prerequisites: Pre-Calc',
+    teachers: []
+  }, {
+    href: '#/calc-bc',
+    duration: 'Full Year',
+    grades: 'Grades: 11-12',
+    prerequisites: 'Prerequisites: Pre-Calc Honors',
+    teachers: ['Thibaudeau', 'Gammelgaard', 'Wiersema']
+  }, {
+    href: '#/apcsp',
+    duration: 'Full Year',
+    grades: 'Grades: 10-11-12',
+    prerequisites: 'Prerequisites: Algebra 1',
+    teachers: ['Svetlik', 'Zietlow']
+  }, {
+    href: '#/programming',
+    duration: 'Full Year',
+    grades: 'Grades: 9-10-11-12',
+    prerequisites: 'Prerequisites: Algebra 1',
+    teachers: ['Sikora']
+  }],
+  animations: {
+    course: {
+      delay: 200, // delay before starting movement (ripples occur meanwhile)
+      duration1:  250, // duration to move card to center of header
+      duration2:  250, // duration to expand card to fill header
+      offset2:  50, // offset between expanding width and expanding height
+      duration3: 50 // duration of final adjustment of height (if necessary)
+    }
+  }
+}
+
+// initialize names and colors in order to ensure they match with index.html's
+constants.homepage.courses.forEach(function(course, index) {
+  var indexCourse = constants.pages.courses[course.href]
+  if(indexCourse) {
+    course.name = indexCourse.name;
+    course.color = indexCourse.color;
+  } else {
+    console.error("Error in href of homepage's course with index of " + index)
+  }
+})
+</script>
+
+<style>
+/* Everything that would be inside homepage must be explicitly declared as a
+  descendant of .homepage just in case other pages use the same classes */
+
+.homepage{
+  margin: 50px;
+  display: none; /*will show using javascript after everything is initialized*/
+}
+
+.homepage .section {
+  max-width: 1000px;
+  margin: auto;
+
+}
+
+.homepage .section .text {
+  font-size: 20px;
+  margin-bottom: 8px;
+  color: #616161;
+}
+
+.homepage .section .hr {
+  background-color: #616161;
+}
+
+.homepage .courses {
+  display: flex;
+  flex-flow: row wrap;
+  width: 95%;
+  margin: auto;
+}
+
+.homepage .course {
+  margin: 20px 10px;
+  flex-grow: 1;
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  cursor: pointer;
+}
+
+.homepage .course .container {
+  margin: 20px 15px;
+}
+
+.homepage .course .text{
+  margin: 7px 0;
+  color: white;
+  font-size: 14px;
+  text-align: center;
+}
+
+.homepage .course .name {
+  font-size: 1.5em;
+}
+
+.homepage .course .hr {
+  margin: 0 auto;
+  background-color: white;
+}
+
+.homepage .course .teachers {
+  margin-top: 5px;
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: center;
+  cursor: default;
+}
+
+.homepage .course .teachers .teacher {
+  border-radius: 25px;
+  background-color: white;
+  display: inline-block;
+  padding: 8px;
+  font-size: 13px;
+  opacity: .9;
+  margin: 5px;
+  color: #212121;
+  cursor: pointer;
+}
+</style>
+
+<div class="templates">
+  <div class="course ripple-enabled">
+    <div class="container">
+      <div class="text name"></div>
+      <div class="text duration"></div>
+      <div class="text grades"></div>
+      <div class="text prerequisites"></div>
+      <div class="hr"></div>
+      <div class="teachers">
+      </div>
+    </div>
+  </div>
+
+  <div class="teacher ripple-enabled ripple-gray"></div>
+</div>
+
+<!-- Initially hidden, will be displayed after everything is initialized-->
+<div class="homepage hide">
+  <div class="section">
+    <div class="text">Courses</div>
+    <div class="hr"></div>
+    <div class="courses"></div>
+  </div>
+</div>
+
+<script>
+function initializeHome() {
+  constants.homepage.courses.forEach(function(course, index) {
+    $course = $(".templates").children('.course').clone();
+    $course.attr('href', course.href);
+    $course.addClass(course.color);
+
+    // sets all children with the same class name as a property in course to the text in course
+    for(var property in course) {
+      $course.find('.' + property).text(course[property]);
+    }
+
+    // need to clear text of .teacher because previous statement unintentionally sets text of .teacher
+    $course.find('.teachers').text('');
+
+    // adds all the teachers using teacher template
+    course.teachers.forEach(function(teacher) {
+      $course.find('.teachers').append($('.templates').children('.teacher').clone().text(teacher));
+    });
+
+    $('.homepage .courses').append($course);
+  });
+
+  $('.homepage .course .teacher').click(function(e){
+    // stop propagation prevents the event from firing on .course
+    e.stopPropagation();
+  });
+
+  // add click listener to trigger animation for going to a course page
+  $('.courses .course').click(function() {
+    var $course = $(this);
+    const params = constants.homepage.animations.course;
+
+    // hides everything else on page while ripples occur
+    $('.homepage .section > *:not(.courses), .courses .course').not($course).velocity({
+      opacity: 0
+    }, params.delay);
+
+    // waits until ripples are mostly done before starting animation
+    setTimeout(function() {
+      // necessary css for animation
+      $course.css({
+        'z-index': 1, // to ensure that this element stays in front of everything else during animation
+        position: 'absolute', // to allow element to move beyond bounds of parent
+        top: $course.offset().top,
+        left: $course.offset().left,
+        margin: 0
+      });
+
+      // animates course to the center of the header
+      $course.velocity({
+        left: [window.innerWidth/2 - $course.width()/2, 'easeOutSine'], // easeOutSine and easeInSine used for curved animation path
+        top: [$('#head').outerHeight()/2 - $course.height()/2, 'easeInSine']
+      }, params.duration1);
+
+      // hides all elements in the course except for the name during the movement animation
+      $course.find(":not(.container, .name)").velocity({
+        opacity: 0
+      }, {
+        duration: params.duration1,
+        complete: function() {
+          $course.find(":not(.container, .name)").remove();
+        }
+      });
+
+      // css to ensure that .name looks identical to the text in the header after animation
+      $course.find('.name').css({
+        textAlign: 'left',
+        margin: 0,
+        letterSpacing: 1.5
+      });
+
+      // waits until first animation (movement to the center of the header) is complete
+      setTimeout(function() {
+        // more css to ensure course looks like the header after animation
+        $course.css({
+          boxShadow: 'none',
+          paddingTop: 100,
+          paddingBottom: 100,
+          borderRadius: 0
+        });
+        $course.children('.container').css({
+          margin: 'auto',
+          maxWidth: 1000
+        });
+
+        // animates width of course to header width
+        $course.velocity({
+          width: window.innerWidth - 200, // -200 is to exclude the padding on the sides
+          left: 0
+        }, {duration: params.duration2, queue: false}); // queue:false allows subsequent animations without waiting for this to complete
+
+        // animates size of .name to size of text in header
+        $course.find('.name').velocity({
+          fontSize: '2.5em'
+        }, {duration: params.duration2, queue: false});
+
+        // animates height of course to header height after a slight delay (the delay slightly enhances the overall look)
+        $course.delay(params.offset2).velocity({
+          height: $('#head').height(),
+          paddingLeft: 100,
+          paddingRight: 100,
+          top: 0
+        }, params.duration2);
+
+        setTimeout(function() {
+          // sets header title to name of course in the background in order to calculate new size of header
+          $('#head .text').text($course.find('.name').text());
+
+          //final adjustment of height if necessary (only when new text uses a different number of lines than old)
+          $course.velocity({
+            height: $("#head").height()
+          }, {
+            duration: params.duration3,
+            complete: function() {
+              $course.remove();
+
+              // points URL to selected course's page
+              location.href = location.origin + location.pathname + $(this).attr('href');
+            }
+          });
+
+        }, params.duration2 + params.offset2);
+      }, params.duration1);
+    }, params.delay);
+
+    // scroll to top of page while ripples and movement happen but before size of course changes to fill header
+    $('html, body').animate({
+      scrollTop: 0
+    }, params.delay + params.duration1);
+  });
+
+  // everything is initialized, show homepage
+  $('.homepage').css('display', 'block');
+}
+</script>
