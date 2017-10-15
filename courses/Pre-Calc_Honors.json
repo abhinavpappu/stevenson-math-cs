@@ -1,6 +1,5 @@
 {
-  "blocks": [
-    {
+  "blocks": [{
       "type": "normal",
       "title": "Overview",
       "text": "This course is a continuation of the mathematics studied in Algebra 2 Accelerated and Geometry Honors. The content includes that of Precalculus Accelerated as well as topics related to limits, vector theory, matrix algebra, discrete mathematics, polar coordinates, proof by induction, and conic sections. Successful completion of this sequence prepares the student for entry into AP Calculus BC"
