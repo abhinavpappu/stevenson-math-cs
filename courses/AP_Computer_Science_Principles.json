@@ -1,6 +1,6 @@
 {
   "blocks": [{
-      "type": "normal",
+      "type": "text",
       "title": "Overview",
       "text": "This course provides students with an understanding of the fundamental concepts of computing, its breadth of application, and its potential for transforming the world we live in. Students enrolled in this course will discover that computing is a creative activity; abstraction reduces information and detail to facilitate focus on relevant concepts; data and information facilitate the creation of knowledge; algorithms are used to develop and express solutions to computational problems; programming enables problem solving, human expression, and creation of knowledge; the internet pervades modern computing; and computing has a global impact. Student discovery and creativity are central to the delivery of course curriculum. Students will find opportunities to be challenged and to discover the creativity within computing, regardless of their programming or computing background. Students who enroll in this course will be prepared to take the AP Computer Science Principles exam in May."
     }

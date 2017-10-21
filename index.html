@@ -200,20 +200,6 @@
     // unintentional modification of the template itself
 
     const constants = {
-      // Whenever any of the other html or data files are modified, also modify the
-      // respective version number below to prevent browser from serving cached file
-      versions: {
-        homepage: '0.1.1',
-        coursepage: '0.1.2',
-        data: { // corresponds to the JSON data files with '_' in place of ' ' (space)
-          'Geometry Honors': '0.1.1',
-          'Pre-Calc Honors': '0.1.1',
-          'AP Calculus AB': '0.1.1',
-          'AP Calculus BC': '0.1.1',
-          'AP Computer Science Principles': '0.1.1',
-          'Computer Programming': '0.1.2'
-        }
-      },
       title: 'Stevenson Math and Computer Science',
       color: 'indigo', // background color of header
       colors: ['orange', 'blue', 'red', 'green', 'purple', 'teal'], // make sure the corresponding CSS classes are added when adding colors
@@ -249,13 +235,13 @@
 
     // initialize course colors
     var i = 0;
-    for(var prop in constants.pages.courses) {
+    for (var prop in constants.pages.courses) {
       constants.pages.courses[prop].color = constants.colors[i++ % constants.colors.length];
     }
 
     function slowDownAnimations(amount = 10) { // temporary, for development purposes
-      for(var a in constants.animations) {
-        for(var b in constants.animations[a]) {
+      for (var a in constants.animations) {
+        for (var b in constants.animations[a]) {
           constants.animations[a][b] *= amount;
         }
       }
@@ -275,12 +261,12 @@
      * @param  {String} [color]  optionally set the loading bar to one of the colors in constants.colors
      */
     function loadingBar(show, color) {
-      if(color) {
+      if (color) {
         $('#loading-bar .bg').removeClass().addClass('bg'); //remove all classes except bg (remove all previous colors)
         $('#loading-bar .bar').removeClass().addClass('bar'); //remove all classes except bar (remove all previous colors)
         $('#loading-bar .bg, #loading-bar .bar').addClass(color);
       }
-      if(show) {
+      if (show) {
         $('#loading-bar').css('display', 'block');
         $('#loading-bar .bar-container.first').addClass('loading-translate-1');
         $('#loading-bar .bar-container.second').addClass('loading-translate-2');
@@ -322,15 +308,15 @@
       $('#head').removeClass();
 
       var loader = false; //loader is a function that is used to load the proper content for each type of page
-      for(prop in constants.pages) {
-        if(constants.pages[prop][page]) {
+      for (prop in constants.pages) {
+        if (constants.pages[prop][page]) {
           loader = constants.pages[prop].loader; // sets the loader function to the loader for the requested page
           page = constants.pages[prop][page]; //sets page to the page object so the loader doesn't have to refind it if necessary
         }
       }
 
       // if the loader for a page isn't found, defaults to loading the home page
-      if(!loader) {
+      if (!loader) {
         loader = loadHome;
       }
       loader(page, function() {
@@ -364,7 +350,7 @@
      * loads homepage.html into space below header
      *
      * @param  {Object} data          currently unused parameter for loadHome that may be necessary for other loaders
-     * @param  {Function} [callback]  calls this function after loading homepage
+     * @param  {Function} [callback]  calls this function after loading homepage with the status as a parameter
      */
     function loadHome(data, callback) {
       $('#head').addClass(constants.color);
@@ -373,12 +359,15 @@
       loadingBar(true, constants.color);
 
       // asynchronously loads homepage.html into #content
-      // ?v= is set to version to make sure browse gets latest version of homepage.html instead of cached version
-      $('#content').load('homepage.html?v=' + constants.versions.homepage, function() {
-        initializeHome();
+      $('#content').load('homepage.html', function(_, status) {
         loadingBar(false);
-        if(callback) {
-          callback();
+        if (status == 'error') {
+          //TODO: show error message
+        } else {
+          initializeHome();
+        }
+        if (callback) {
+          callback(status);
         }
       })
     }
@@ -388,7 +377,7 @@
      * loads courspage.html with the data of the desired course
      *
      * @param  {Object} course        the data for the desired course to load (use the objects contained in constants.pages.courses)
-     * @param  {Function} [callback]  calls this function after loading coursepage
+     * @param  {Function} [callback]  calls this function after loading coursepage with the status as a parameter
      */
     function loadCourse(course, callback) {
       $('#head').addClass(course.color);
@@ -396,18 +385,25 @@
 
       loadingBar(true, course.color);
       // asynchronously loads coursepage.html into #content
-      // ?v= is set to version to make sure browse gets latest version of coursepage.html instead of cached version
-      $("#content").load('coursepage.html?v=' + constants.versions.coursepage, function() {
-        //gets the data for the desired course to load
-        $.get('courses/' + course.name.replace(/ /g, '_') + '.json' +
-              '?v=' + constants.versions.data[course.name], function(data) {
-          data.color = course.color;
-          initializeCourse(data);
+      $("#content").load('coursepage.html', function(_, status) {
+        if (status == 'error') {
           loadingBar(false);
-          if(callback) {
-            callback();
-          }
-        });
+          //TODO: show error message
+          if (callback) callback(status);
+        } else {
+          //gets the data for the desired course
+          $.get('courses/' + course.name.replace(/ /g, '_') + '.json', function(data, status) {
+            loadingBar(false);
+            if (status == 'error') {
+              //TODO: show error message
+            } else {
+              data.color = course.color;
+              data.name = course.name;
+              initializeCourse(data);
+            }
+            if (callback) callback(status);
+          });
+        }
       });
     }
 

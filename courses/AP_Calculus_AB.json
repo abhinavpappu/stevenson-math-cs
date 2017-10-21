@@ -1,6 +1,6 @@
 {
   "blocks": [{
-      "type": "normal",
+      "type": "text",
       "title": "Overview",
       "text": "AP Calculus AB is primarily concerned with developing students’ understanding of the concepts of calculus and providing experience with its methods and applications. The course emphasizes a multi-representational approach to calculus with concepts, results, and problems expressed graphically, numerically, analytically, and verbally. The connections among these representations are also important. Topics covered in this course include limits, differentiation, integration, continuity, indeterminate forms, and improper integrals. Students who enroll in this course will be prepared to take the AP Calculus AB exam in May."
     }

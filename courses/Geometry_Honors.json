@@ -1,6 +1,6 @@
 {
   "blocks": [{
-      "type": "normal",
+      "type": "text",
       "title": "Overview",
       "text": "This course is an in-depth study of Euclidean geometry including extension topics of coordinate geometry, geometric probability and transformations. The course stresses problem solving skills and the development of logical reasoning and communication of mathematics. Algebra 2 topics are integrated extensively throughout the course. Successful completion will prepare the student for Precalculus Honors."
     }

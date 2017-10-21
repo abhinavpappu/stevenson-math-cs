@@ -7,10 +7,14 @@
   display: none; /*will show using javascript after everything is initialized*/
 }
 
-.coursepage > .block {
+.coursepage .block {
   max-width: 1000px;
   margin: auto;
   margin-bottom: 60px;
+}
+
+.coursepage .block div {
+  white-space: pre-wrap; /*Preserves whitespace (spaces and new lines)*/
 }
 
 .coursepage .title {
@@ -21,13 +25,27 @@
 .coursepage .text {
   line-height: 1.5;
 }
+
+.coursepage .list {
+  line-height: 1.5;
+}
+
+.coursepage .list .list-item {
+  margin-bottom: 5px;
+}
+
+.coursepage .list .item-number {
+  font-size: 1.25em;
+}
 </style>
 
 <div class="templates">
   <div class="block">
     <div class="title"></div>
-    <div class="text"></div>
   </div>
+  <div class="text"></div>
+  <div class="list"></div>
+  <div class="list-item"><span class="item-number"></span></div>
 </div>
 
 <!-- Initially hidden, will be displayed after everything is initialized-->
@@ -36,11 +54,42 @@
 
 <script>
 function initializeCourse(courseData) {
-  courseData.blocks.forEach(function(block) {
-    $block = $('.templates > .block').clone();
-    $block.children('.title').text(block.title).addClass(courseData.color + '-text');
-    $block.children('.text').text(block.text);
-    $('.coursepage').append($block);
+  var fromTemplate = function(query) {
+    var $element = $('.templates').children(query);
+    if ($element.length != 1) {
+      console.error("Template doesn't exist or more than one template matches the search query");
+    }
+    return $element.clone();
+  }
+  courseData.blocks.forEach(function(block, index) {
+    if (block.type && block.title) {
+      $block = fromTemplate('.block');
+      $block.children('.title').text(block.title).addClass(courseData.color + '-text');
+      if (block.type == 'text') {
+        if (block.text == undefined) {
+          console.error('The "text" property is not specified in the block with index ' + index + ' of the ' + courseData.name + ' data');
+        } else {
+          $block.append(fromTemplate('.text').text(block.text));
+        }
+      } else if (block.type == 'numbered-list') {
+        if (block.list == undefined) {
+          console.error('The "list" property is not specified in the block with index ' + index + ' of the ' + courseData.name + ' data');
+        } else {
+          $block.append(fromTemplate('.list'));
+          block.list.forEach(function(item, index) {
+            var $listItem = fromTemplate('.list-item')
+            $listItem.children('.item-number').text(index + 1 + '. ')
+                     .addClass(courseData.color + '-text');
+            $listItem.append(item);
+            $block.children('.list').append($listItem);
+          });
+        }
+      }
+
+      $('.coursepage').append($block);
+    } else {
+      console.error('The type or title is not specified in the block with index ' + index + ' of the ' + courseData.name + ' data');
+    }
   });
 
   $('.coursepage').css('display', 'block');

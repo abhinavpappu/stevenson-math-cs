@@ -1,8 +1,12 @@
 {
   "blocks": [{
-      "type": "normal",
+      "type": "text",
       "title": "Overview",
       "text": "This course is a continuation of the mathematics studied in Algebra 2 Accelerated and Geometry Honors. The content includes that of Precalculus Accelerated as well as topics related to limits, vector theory, matrix algebra, discrete mathematics, polar coordinates, proof by induction, and conic sections. Successful completion of this sequence prepares the student for entry into AP Calculus BC"
+    }, {
+      "type": "numbered-list",
+      "title": "Objectives",
+      "list": ["Represent functions verbally, graphically, algebraically, and numerically.", "Use a graphing calculator as a tool when appropriate.", "Analyze the behavior and meaning of graphs in various contexts.", "Apply and identify transformations of functions.", "Simplify and evaluate expressions involving functions.", "Prove trigonometric identities, and solve trigonometric equations.", "Analyze, graph, and apply polar coordinates, including graphs in parametric form.", "Use matrices and vectors to solve application problems.", "Use parametric models in problem solving and recognize their connections to vector functions.", "Connect conics to parametrics, polars and rectangular functions.", "Demonstrate an understanding of topics involving sequences and series.", "Determine the limit of a function."]
     }
   ]
 }
