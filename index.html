@@ -350,7 +350,7 @@
      * loads homepage.html into space below header
      *
      * @param  {Object} data          currently unused parameter for loadHome that may be necessary for other loaders
-     * @param  {Function} [callback]  calls this function after loading homepage with the status as a parameter
+     * @param  {Function} [callback]  calls this function after loading homepage with the status as a parameter: true if successful
      */
     function loadHome(data, callback) {
       $('#head').addClass(constants.color);
@@ -358,18 +358,18 @@
 
       loadingBar(true, constants.color);
 
-      // asynchronously loads homepage.html into #content
-      $('#content').load('homepage.html', function(_, status) {
+      // gets homepage.html and loads it into #content
+      $.get('homepage.html').done(function(data) {
+        $("#content").html(data);
+        initializeHome();
+        if (callback) callback(true);
+      }).fail(function(_, status) {
+        console.error('Error loading homepage.html, status="' + status + '"');
+        //TODO: show user friendly error message
+        if (callback) callback(false);
+      }).always(function() {
         loadingBar(false);
-        if (status == 'error') {
-          //TODO: show error message
-        } else {
-          initializeHome();
-        }
-        if (callback) {
-          callback(status);
-        }
-      })
+      });
     }
 
 
@@ -377,33 +377,37 @@
      * loads courspage.html with the data of the desired course
      *
      * @param  {Object} course        the data for the desired course to load (use the objects contained in constants.pages.courses)
-     * @param  {Function} [callback]  calls this function after loading coursepage with the status as a parameter
+     * @param  {Function} [callback]  calls this function after loading coursepage with the status as a parameter: true if successful
      */
     function loadCourse(course, callback) {
       $('#head').addClass(course.color);
       $('#head .text').text(course.name);
 
       loadingBar(true, course.color);
-      // asynchronously loads coursepage.html into #content
-      $("#content").load('coursepage.html', function(_, status) {
-        if (status == 'error') {
+      // gets coursepage.html and loads it into #content
+      $.get('coursepage.html').done(function(data) {
+        $("#content").html(data);
+
+        // gets the data for the desired course
+        $.get('courses/' + course.name.replace(/ /g, '_') + '.json').done(function(data) {
+          data.color = course.color;
+          data.name = course.name;
+          initializeCourse(data);
+          if (callback) callback(true);
+        }).fail(function(_, status) {
+          console.error('Error loading or parsing courses/' + course.name.replace(/ /g, '_')
+                        + '.json, status="' + status + '"');
+          //TODO: show user friendly error page
+          if (callback) callback(false);
+        }).always(function() {
           loadingBar(false);
-          //TODO: show error message
-          if (callback) callback(status);
-        } else {
-          //gets the data for the desired course
-          $.get('courses/' + course.name.replace(/ /g, '_') + '.json', function(data, status) {
-            loadingBar(false);
-            if (status == 'error') {
-              //TODO: show error message
-            } else {
-              data.color = course.color;
-              data.name = course.name;
-              initializeCourse(data);
-            }
-            if (callback) callback(status);
-          });
-        }
+        });
+
+      }).fail(function(_, status) {
+        console.error('Error loading coursepage.html, status = "' + status + '"');
+        loadingBar(false);
+        //TODO: show user friendly error page
+        if(callback) callback(false);
       });
     }
 

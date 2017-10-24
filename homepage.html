@@ -173,11 +173,11 @@ function initializeHome() {
     $course.attr('href', course.href);
     $course.addClass(course.color);
 
-    // sets all children with the same class name as a property in course to the text in course
+    // initializes text for each text element in $course
+    // matches the property names in the course object with the classes of each element
     for(var property in course) {
       $course.find('.' + property).text(course[property]);
     }
-
     // need to clear text of .teacher because previous statement unintentionally sets text of .teacher
     $course.find('.teachers').text('');
 
@@ -199,7 +199,7 @@ function initializeHome() {
     var $course = $(this);
     const params = constants.homepage.animations.course;
 
-    // hides everything else on page while ripples occur
+    // slowly hides everything else on page while ripples occur
     $('.homepage .section > *:not(.courses), .courses .course').not($course).velocity({
       opacity: 0
     }, params.delay);
