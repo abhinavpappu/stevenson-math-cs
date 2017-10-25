@@ -98,6 +98,8 @@ constants.homepage.courses.forEach(function(course, index) {
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   border-radius: 2px;
   cursor: pointer;
+  text-decoration: none;
+  display: block;
 }
 
 .homepage .course .container {
@@ -142,7 +144,7 @@ constants.homepage.courses.forEach(function(course, index) {
 </style>
 
 <div class="templates">
-  <div class="course ripple-enabled">
+  <a class="course ripple-enabled">
     <div class="container">
       <div class="text name"></div>
       <div class="text duration"></div>
@@ -152,7 +154,7 @@ constants.homepage.courses.forEach(function(course, index) {
       <div class="teachers">
       </div>
     </div>
-  </div>
+  </a>
 
   <div class="teacher ripple-enabled ripple-gray"></div>
 </div>
@@ -195,7 +197,9 @@ function initializeHome() {
   });
 
   // add click listener to trigger animation for going to a course page
-  $('.courses .course').click(function() {
+  $('.courses .course').click(function(e) {
+    e.preventDefault(); // to prevent the browser from instantly going to the link
+
     var $course = $(this);
     const params = constants.homepage.animations.course;
 
