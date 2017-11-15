@@ -3,6 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no">
+    <link href="https://fonts.googleapis.com/css?family=Roboto|Open+Sans" rel="stylesheet">
+    <link href="https://maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet" integrity="sha384-wvfXpqpZZVQGK6TAh5PVlGOfQNHSoD2xbE+QkPxCAFlNEevoEH3Sl0sibVcOQVnN" crossorigin="anonymous">
     <title>Stevenson Math and CS</title>
     <style>
     html, body {
@@ -27,7 +29,7 @@
       overflow: hidden;
     }
 
-    .ripple-gray .ripple {
+    .ripple-gray .ripple, .ripple-grey .ripple {
       background-color: gray;
     }
 
@@ -41,7 +43,7 @@
       position: absolute;
     }
 
-    .indigo {background-color: #303f9f}
+    .indigo {background-color: #303F9F}
     .red {background-color: #F44336}
     .purple {background-color: #673AB7}
     .blue {background-color: #1E88E5}
@@ -169,12 +171,78 @@
         transform: scaleX(.08)
       }
     }
+
+    .teacher-card {
+      box-shadow: 0px 2px 4px -1px rgba(0, 0, 0, 0.2), 0px 4px 5px 0px rgba(0, 0, 0, 0.14), 0px 1px 10px 0px rgba(0, 0, 0, 0.12);
+      background-color: white;
+      display: inline-block;
+      border-radius: 2px;
+      position: absolute;
+    }
+
+    .teacher-card .container {
+      margin: 20px;
+      visibility: hidden;
+      width: 210px;
+    }
+
+    .teacher-card .image {
+      background-size: cover;
+      height: 90px;
+      width: 90px;
+      border-radius: 45px;
+      margin: 0 auto 5px auto;
+    }
+
+    .teacher-card .name {
+      text-align: center;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+    }
+
+    .teacher-card .course-names {
+      font-size: .8em;
+      text-align: center;
+      opacity: .75;
+      margin-bottom: 15px;
+    }
+
+    .teacher-card .contact {
+      text-decoration: none;
+      color: black;
+      display: block;
+      padding: 6px;
+      border-radius: 100px;
+    }
+
+    .teacher-card .contact i {
+      font-size: 1.2em;
+    }
+
+    .teacher-card .contact .text {
+      display: inline-block;
+      font-size: .8em;
+      margin-left: 5px;
+    }
     </style>
   </head>
 
   <body>
     <div class="templates">
       <div class="ripple"></div>
+
+      <div class="teacher-card">
+        <div class="container">
+          <div class="image"></div>
+          <div class="name"></div>
+          <div class="course-names">
+          </div>
+        </div>
+      </div>
+      <a class="contact ripple-enabled ripple-gray">
+        <i></i>
+        <div class="text"></div>
+      </a>
     </div>
 
     <div id="head">
@@ -208,23 +276,42 @@
           loader: loadCourse,
           '#/geometry-honors': {
             name: 'Geometry Honors', // the name is used to obtain the corresponding JSON data file (replace spaces with underscores)
+            teachers: ['Christian Thibaudeau', 'Bradley Habel']
           },
           '#/precalc-honors': {
             name: 'Pre-Calc Honors',
+            teachers: ['Paul Kim']
           },
           '#/calc-ab': {
             name: 'AP Calculus AB',
+            teachers: []
           },
           '#/calc-bc': {
             name: 'AP Calculus BC',
+            teachers: ['Christian Thibaudeau', 'Robert Gammelgaard', 'Deborah Wiersema']
           },
           '#/apcsp': {
             name: 'AP Computer Science Principles',
+            teachers: ['Steven Svetlik', 'Michelle Zietlow']
           },
           '#/programming': {
             name: 'Computer Programming',
+            teachers: ['Todd Sikora']
           }
         }
+      },
+      teachers: { //TODO: Organize alphabetically
+        'Christian Thibaudeau': {
+          email: 'cthibaudeau@d125.org',
+          phone: 8474154624
+        },
+        'Paul Kim': {},
+        'Robert Gammelgaard': {},
+        'Bradley Habel': {},
+        'Deborah Wiersema': {},
+        'Steven Svetlik': {},
+        'Michelle Zietlow': {},
+        'Todd Sikora': {}
       },
       animations: { //any durations/delays for animations are stored here for easy modification
         ripple: {
@@ -292,6 +379,32 @@
       load();
     });
 
+    function initializeRipples($parent) {
+      $parent = $parent || $('body');
+      $parent.find('.ripple-enabled').click(function(e) {
+        // mouse x and y relative to the clicked element instead of the page
+        var relX = e.pageX - $(this).offset().left;
+        var relY = e.pageY - $(this).offset().top;
+
+        // clones ripple to ensure that a new copy is being used for each click
+        var ripple = $(".templates").children(".ripple").clone();
+
+        // adds ripple to clicked element and sets position to click location
+        $(this).append(ripple);
+        ripple.css({left: relX, top: relY});
+
+        // gets length of twice the diagonal in order for ripple to cover all of the element even if mouse click
+        // is in a corner and then divides by ripple's diameter to get appropriate scale amount
+        var scaleAmount = Math.sqrt(Math.pow($(this).outerHeight(), 2) + Math.pow($(this).outerWidth(), 2)) * 2 / ripple.width();
+        ripple.css({'transform': 'scale(' + scaleAmount + ')', 'opacity': .2});
+
+        // removes ripple after 300 milliseconds
+        setTimeout(function() {
+          ripple.remove();
+        }, constants.animations.ripple.duration);
+      });
+    }
+
 
     /**
      * loads a page using the specified page
@@ -320,29 +433,8 @@
         loader = loadHome;
       }
       loader(page, function() {
-        // the click listener needs to be attached after page is loaded
-        $('.ripple-enabled').click(function(e) {
-          // mouse x and y relative to the clicked element instead of the page
-          var relX = e.pageX - $(this).offset().left;
-          var relY = e.pageY - $(this).offset().top;
-
-          // clones ripple to ensure that a new copy is being used for each click
-          var ripple = $(".templates").children(".ripple").clone();
-
-          // adds ripple to clicked element and sets position to click location
-          $(this).append(ripple);
-          ripple.css({left: relX, top: relY});
-
-          // gets length of twice the diagonal in order for ripple to cover all of the element even if mouse click
-          // is in a corner and then divides by ripple's diameter to get appropriate scale amount
-          var scaleAmount = Math.sqrt(Math.pow($(this).outerHeight(), 2) + Math.pow($(this).outerWidth(), 2)) * 2 / ripple.width();
-          ripple.css({'transform': 'scale(' + scaleAmount + ')', 'opacity': .2});
-
-          // removes ripple after 300 milliseconds
-          setTimeout(function() {
-            ripple.remove();
-          }, constants.animations.ripple.duration);
-        });
+        // ripples need to be initialized after page is completely loaded
+        initializeRipples();
       });
     }
 
@@ -409,6 +501,52 @@
         //TODO: show user friendly error page
         if(callback) callback(false);
       });
+    }
+
+    function createTeacherCard(teacherName, color) {
+      var $card = $('.templates').children('.teacher-card').clone();
+      $card.find('.image').css('background-image', 'url("pictures/'
+        + (constants.teachers[teacherName].picture || color + '.jpg') + '")');
+      $card.find('.name').text(teacherName);
+
+      // finds each course taught by teacher and adds them to the card
+      for (var prop in constants.pages.courses) {
+        var course = constants.pages.courses[prop];
+        if(course.teachers && course.teachers.indexOf(teacherName) > -1) {
+          $card.find('.course-names').append('<div>' + course.name + '</div');
+        }
+      }
+
+      // adds contact information based on what is specified in the data
+      // email, phone number supported so far
+      if(constants.teachers[teacherName]) {
+        var contactOptions = [{
+          value: constants.teachers[teacherName].email,
+          icon: 'fa fa-envelope',
+          href: 'mailto:' + constants.teachers[teacherName].email
+        }, {
+          value: constants.teachers[teacherName].phone,
+          icon: 'fa fa-phone',
+          href: 'tel:' + constants.teachers[teacherName].phone,
+          format: function(phone) {
+            return '(' + phone.slice(0, 3) + ') ' + phone.slice(3, 6) + '-' + phone.slice(6, 10);
+          }
+        }];
+        contactOptions.forEach(function(contact) {
+          if(contact.value) {
+            var value = contact.value + ''; //convert to string
+            var $contact = $('.templates').children('.contact').clone();
+            $contact.children('i').addClass(contact.icon).addClass(color + '-text');
+            $contact.attr('href', contact.href);
+            var text = contact.format? contact.format(value) : value;
+            $contact.children('.text').text(text);
+            $card.children('.container').append($contact);
+          }
+        });
+      }
+      initializeRipples($card);
+
+      return $card;
     }
 
     function log() { // temporary, for development purposes

@@ -4,38 +4,32 @@ constants.homepage = {
     href: '#/geometry-honors',
     duration: 'Full Year',
     grades: 'Grades: 9-10',
-    prerequisites: 'Prerequisites: Algebra 2',
-    teachers: ['Thibaudeau', 'Habel']
+    prerequisites: 'Prerequisites: Algebra 2'
   }, {
     href: '#/precalc-honors',
     duration: 'Full Year',
     grades: 'Grades: 10-11',
-    prerequisites: 'Prerequisites: Geometry Honors',
-    teachers: ['Kim', 'Royce']
+    prerequisites: 'Prerequisites: Geometry Honors'
   }, {
     href: '#/calc-ab',
     duration: 'Full Year',
     grades: 'Grades: 11-12',
-    prerequisites: 'Prerequisites: Pre-Calc',
-    teachers: []
+    prerequisites: 'Prerequisites: Pre-Calc'
   }, {
     href: '#/calc-bc',
     duration: 'Full Year',
     grades: 'Grades: 11-12',
-    prerequisites: 'Prerequisites: Pre-Calc Honors',
-    teachers: ['Thibaudeau', 'Gammelgaard', 'Wiersema']
+    prerequisites: 'Prerequisites: Pre-Calc Honors'
   }, {
     href: '#/apcsp',
     duration: 'Full Year',
     grades: 'Grades: 10-11-12',
-    prerequisites: 'Prerequisites: Algebra 1',
-    teachers: ['Svetlik', 'Zietlow']
+    prerequisites: 'Prerequisites: Algebra 1'
   }, {
     href: '#/programming',
     duration: 'Full Year',
     grades: 'Grades: 9-10-11-12',
-    prerequisites: 'Prerequisites: Algebra 1',
-    teachers: ['Sikora']
+    prerequisites: 'Prerequisites: Algebra 1'
   }],
   animations: {
     course: {
@@ -48,11 +42,12 @@ constants.homepage = {
   }
 }
 
-// initialize names and colors in order to ensure they match with index.html's
+// initialize name, teachers, and color of each course in order to ensure they match with index.html's
 constants.homepage.courses.forEach(function(course, index) {
   var indexCourse = constants.pages.courses[course.href]
   if(indexCourse) {
     course.name = indexCourse.name;
+    course.teachers = indexCourse.teachers;
     course.color = indexCourse.color;
   } else {
     console.error("Error in href of homepage's course with index of " + index)
@@ -72,7 +67,6 @@ constants.homepage.courses.forEach(function(course, index) {
 .homepage .section {
   max-width: 1000px;
   margin: auto;
-
 }
 
 .homepage .section .text {
@@ -97,7 +91,6 @@ constants.homepage.courses.forEach(function(course, index) {
   flex-grow: 1;
   box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
   border-radius: 2px;
-  cursor: pointer;
   text-decoration: none;
   display: block;
 }
@@ -155,7 +148,6 @@ constants.homepage.courses.forEach(function(course, index) {
       </div>
     </div>
   </a>
-
   <div class="teacher ripple-enabled ripple-gray"></div>
 </div>
 
@@ -183,17 +175,49 @@ function initializeHome() {
     // need to clear text of .teacher because previous statement unintentionally sets text of .teacher
     $course.find('.teachers').text('');
 
-    // adds all the teachers using teacher template
+    // adds all the teachers using teacher template and the teacher's last name
     course.teachers.forEach(function(teacher) {
-      $course.find('.teachers').append($('.templates').children('.teacher').clone().text(teacher));
+      $course.find('.teachers').each(function() {
+        var names = teacher.split(' ');
+        var $teacher = $('.templates').children('.teacher').clone();
+        $teacher.text(names[names.length - 1]);
+        $teacher.data('teacher', teacher); // teacher's full name is stored in the data attribute to facilitate search later (onClick)
+        $teacher.data('color', course.color); //teacher's color is also stored in order for setting icon color of teacher card onClick
+        $(this).append($teacher);
+      });
     });
 
     $('.homepage .courses').append($course);
   });
 
   $('.homepage .course .teacher').click(function(e){
-    // stop propagation prevents the event from firing on .course
-    e.stopPropagation();
+     // createTeacherCard is defined in index.html
+    var $card = createTeacherCard($(this).data('teacher'), $(this).data('color'));
+
+    $('body').append($card);
+    var width = $card.width(), height = $card.height();
+    $card.css({
+      top: $(this).offset().top,
+      left: $(this).offset().left + $(this).width(),
+      width: 0,
+      height: 0
+    });
+    var newTop = $(this).offset().top - height;
+    $card.velocity({width: width, height: height, top: newTop}, 250);
+    setTimeout(function() {
+      $card.children('.container').css('visibility', 'visible');
+    }, 300);
+
+    // remove when user clicks anywhere else, .teacher is included because it stops propagation to body
+    $('body, .teacher').click(function() {
+      if($card) {
+        $card.remove();
+        $card = undefined;
+      }
+    })
+
+    // prevents the event from propagating and firing on .course
+    return false;
   });
 
   // add click listener to trigger animation for going to a course page
