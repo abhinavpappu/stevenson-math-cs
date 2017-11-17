@@ -163,7 +163,7 @@ constants.homepage.courses.forEach(function(course, index) {
 <script>
 function initializeHome() {
   constants.homepage.courses.forEach(function(course, index) {
-    $course = $(".templates").children('.course').clone();
+    $course = fromTemplate('.course');
     $course.attr('href', course.href);
     $course.addClass(course.color);
 
@@ -179,8 +179,8 @@ function initializeHome() {
     course.teachers.forEach(function(teacher) {
       $course.find('.teachers').each(function() {
         var names = teacher.split(' ');
-        var $teacher = $('.templates').children('.teacher').clone();
-        $teacher.text(names[names.length - 1]);
+        var $teacher = fromTemplate('.teacher');
+        $teacher.text(names[names.length - 1]); // set's the text to teacher's last name
         $teacher.data('teacher', teacher); // teacher's full name is stored in the data attribute to facilitate search later (onClick)
         $teacher.data('color', course.color); //teacher's color is also stored in order for setting icon color of teacher card onClick
         $(this).append($teacher);
@@ -204,17 +204,17 @@ function initializeHome() {
     });
     var newTop = $(this).offset().top - height;
     $card.velocity({width: width, height: height, top: newTop}, 250);
-    setTimeout(function() {
-      $card.children('.container').css('visibility', 'visible');
-    }, 300);
 
-    // remove when user clicks anywhere else, .teacher is included because it stops propagation to body
-    $('body, .teacher').click(function() {
+    var removeCard = function() {
       if($card) {
         $card.remove();
         $card = undefined;
       }
-    })
+    }
+
+    // remove when user clicks anywhere else, .teacher is included because it stops propagation to body
+    $('body, .teacher').click(removeCard);
+    $(window).resize(removeCard);
 
     // prevents the event from propagating and firing on .course
     return false;

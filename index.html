@@ -178,11 +178,11 @@
       display: inline-block;
       border-radius: 2px;
       position: absolute;
+      overflow: hidden;
     }
 
     .teacher-card .container {
       margin: 20px;
-      visibility: hidden;
       width: 210px;
     }
 
@@ -334,6 +334,14 @@
       }
     }
 
+    function fromTemplate(query) {
+      var $element = $('.templates').children(query);
+      if ($element.length != 1) {
+        console.error(($element.length == 0)? "Template doesn't exist" : 'Multiple templates match the search query "' + query + '"');
+      }
+      return $element.clone();
+    }
+
     // loads homepage whenever #head is clicked
     $("#head").click(function() {
       location.href = location.origin + location.pathname;
@@ -385,9 +393,7 @@
         // mouse x and y relative to the clicked element instead of the page
         var relX = e.pageX - $(this).offset().left;
         var relY = e.pageY - $(this).offset().top;
-
-        // clones ripple to ensure that a new copy is being used for each click
-        var ripple = $(".templates").children(".ripple").clone();
+        var ripple = fromTemplate('.ripple');
 
         // adds ripple to clicked element and sets position to click location
         $(this).append(ripple);
@@ -484,7 +490,10 @@
         $.get('courses/' + course.name.replace(/ /g, '_') + '.json').done(function(data) {
           data.color = course.color;
           data.name = course.name;
-          initializeCourse(data);
+          // ensures that the user has remained on the same page while the data was loading
+          if (course === constants.pages.courses[location.hash]) {
+            initializeCourse(data);
+          }
           if (callback) callback(true);
         }).fail(function(_, status) {
           console.error('Error loading or parsing courses/' + course.name.replace(/ /g, '_')
@@ -504,7 +513,7 @@
     }
 
     function createTeacherCard(teacherName, color) {
-      var $card = $('.templates').children('.teacher-card').clone();
+      var $card = fromTemplate('.teacher-card');
       $card.find('.image').css('background-image', 'url("pictures/'
         + (constants.teachers[teacherName].picture || color + '.jpg') + '")');
       $card.find('.name').text(teacherName);
@@ -535,7 +544,7 @@
         contactOptions.forEach(function(contact) {
           if(contact.value) {
             var value = contact.value + ''; //convert to string
-            var $contact = $('.templates').children('.contact').clone();
+            var $contact = fromTemplate('.contact');
             $contact.children('i').addClass(contact.icon).addClass(color + '-text');
             $contact.attr('href', contact.href);
             var text = contact.format? contact.format(value) : value;
@@ -545,6 +554,12 @@
         });
       }
       initializeRipples($card);
+
+      // in order to prevent card from disappearing on click in homepage.html where the default behavior
+      // is to remove card on body click. stopPropagation prevents event from firing on body
+      $card.click(function(e) {
+        e.stopPropagation();
+      });
 
       return $card;
     }

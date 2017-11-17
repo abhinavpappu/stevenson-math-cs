@@ -54,13 +54,6 @@
 
 <script>
 function initializeCourse(courseData) {
-  var fromTemplate = function(query) {
-    var $element = $('.templates').children(query);
-    if ($element.length != 1) {
-      console.error("Template doesn't exist or more than one template matches the search query");
-    }
-    return $element.clone();
-  }
   courseData.blocks.forEach(function(block, index) {
     if (block.type && block.title) {
       $block = fromTemplate('.block');
