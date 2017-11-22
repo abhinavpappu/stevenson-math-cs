@@ -13,13 +13,28 @@
   margin-bottom: 60px;
 }
 
-.coursepage .block div {
+.coursepage .block .text {
   white-space: pre-wrap; /*Preserves whitespace (spaces and new lines)*/
 }
 
 .coursepage .title {
   font-size: 2em;
   margin-bottom: 20px;
+}
+
+.coursepage .teachers {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.coursepage .teachers .teacher-card {
+  max-width: 350px;
+  min-width: 250px;
+  flex: 1;
+}
+
+.coursepage .teachers .teacher-card .container {
+  width: initial;
 }
 
 .coursepage .text {
@@ -37,15 +52,83 @@
 .coursepage .list .item-number {
   font-size: 1.25em;
 }
+
+.coursepage .distribution-container {
+  display: flex;
+  color: white;
+  height: 125px;
+}
+
+.coursepage .distribution-container .distribution {
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  font-size: 1.25em;
+  padding: 0 5px;
+}
+
+.links {
+  display: flex;
+  flex-flow: row wrap;
+}
+
+.link {
+  box-shadow: 0px 3px 1px -2px rgba(0, 0, 0, 0.2), 0px 2px 2px 0px rgba(0, 0, 0, 0.14), 0px 1px 5px 0px rgba(0, 0, 0, 0.12);
+  border-radius: 2px;
+  margin: 10px;
+  min-width: 200px;
+  max-width: 300px;
+  text-decoration: none;
+  color: black;
+  overflow: hidden;
+  flex: 1;
+}
+
+.link img {
+  width: 100%;
+}
+
+.link .text {
+  margin: 5px 10px;
+  text-align: center;
+  font-size: 1.3em;
+  color: #212121;
+}
+
+.link .subtext {
+  margin: 0 10px;
+  text-align: center;
+  font-size: .9em;
+  color: #616161;
+  margin-bottom: 10px;
+}
 </style>
 
 <div class="templates">
   <div class="block">
     <div class="title"></div>
   </div>
+
   <div class="text"></div>
+
+  <div class="teachers"></div>
+
   <div class="list"></div>
   <div class="list-item"><span class="item-number"></span></div>
+
+  <div class='distribution-container'></div>
+  <div class="distribution">
+    <div class="category"></div>
+    <div class="percent"></div>
+  </div>
+
+  <div class="links"></div>
+  <a class="link" target="_blank">
+    <img />
+    <div class="text"></div>
+    <div class="subtext"></div>
+  </a>
 </div>
 
 <!-- Initially hidden, will be displayed after everything is initialized-->
@@ -54,34 +137,85 @@
 
 <script>
 function initializeCourse(courseData) {
-  courseData.blocks.forEach(function(block, index) {
+  courseData.blocks.forEach((block, index) => {
+    var invalidPropertyError = property => {
+      console.error('The "' + property + '" property is unspecified or invalid in the block with index '
+                    + index + ' of the ' + courseData.name + ' data file');
+    }
     if (block.type && block.title) {
       $block = fromTemplate('.block');
       $block.children('.title').text(block.title).addClass(courseData.color + '-text');
       if (block.type == 'text') {
-        if (block.text == undefined) {
-          console.error('The "text" property is not specified in the block with index ' + index + ' of the ' + courseData.name + ' data');
+        if (block.text === undefined) {
+          invalidPropertyError('text');
         } else {
           $block.append(fromTemplate('.text').text(block.text));
         }
+      } else if (block.type == 'teachers') {
+        $teachers = fromTemplate('.teachers');
+        courseData.teachers.forEach(teacher => {
+          $teachers.append(createTeacherCard(teacher, courseData.color));
+        });
+        $block.append($teachers);
       } else if (block.type == 'numbered-list') {
-        if (block.list == undefined) {
-          console.error('The "list" property is not specified in the block with index ' + index + ' of the ' + courseData.name + ' data');
+        if (!Array.isArray(block.list)) {
+          invalidPropertyError(list);
         } else {
-          $block.append(fromTemplate('.list'));
+          $list = fromTemplate('.list');
           block.list.forEach(function(item, index) {
             var $listItem = fromTemplate('.list-item')
             $listItem.children('.item-number').text(index + 1 + '. ')
                      .addClass(courseData.color + '-text');
             $listItem.append(item);
-            $block.children('.list').append($listItem);
+            $list.append($listItem);
           });
+          $block.append($list);
         }
+      } else if (block.type == 'grade-distribution') {
+        if (!Array.isArray(block.categories)) {
+          invalidPropertyError('categories');
+        } else if (!Array.isArray(block.distribution)) {
+          invalidPropertyError('distribution');
+        } else {
+          $container = fromTemplate('.distribution-container');
+          var startShade = Math.ceil(-block.distribution.length / 2) / 5;
+          block.distribution.forEach((percent, index) => {
+            $distribution = fromTemplate('.distribution');
+            $distribution.children('.category').text(block.categories[index]);
+            $distribution.children('.percent').text(percent + '%');
+            $distribution.css({
+              'flex': (!isNaN(percent)? percent : percent.split('-').slice(-1)[0])+ '', //if it is a range of numbers, uses first number to set element size
+              'background-color': shadeColor(courseData.color, startShade + .2 * index)
+            });
+            $container.append($distribution);
+          });
+          $block.append($container);
+        }
+      } else if (block.type == 'links') {
+        if(block.links === undefined) {
+          invalidPropertyError('links');
+        } else {
+          $links = fromTemplate('.links');
+          block.links.forEach((link, i) => {
+            var $link = fromTemplate('.link');
+            var [image, text, subtext] = [block.images[i], block.texts[i], block.subtexts[i]];
+            if (link) $link.attr('href', link);
+            //if (image) $link.children('.image').css('background-image', 'url("images/' + image + '")');
+            if (image) $link.children('img').attr('src', `images/${image}`);
+            if (text) $link.children('.text').text(text);
+            if (subtext) $link.children('.subtext').text(subtext);
+            $links.append($link);
+          });
+          $block.append($links);
+        }
+      } else {
+        invalidPropertyError('type');
       }
 
       $('.coursepage').append($block);
     } else {
-      console.error('The type or title is not specified in the block with index ' + index + ' of the ' + courseData.name + ' data');
+      if (!block.type) invalidPropertyError('type');
+      if (!block.title) invalidPropertyError('title');
     }
   });
 

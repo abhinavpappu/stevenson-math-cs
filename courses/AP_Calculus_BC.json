@@ -1,8 +1,26 @@
 {
   "blocks": [{
-      "type": "text",
-      "title": "Overview",
-      "text": "This course deals with the BC content of the AP curriculum beyond that of the Calculus AB sequence. Additional topics include sequences, infinite series, solutions of differential equations, advanced techniques of integration, as well as parametric and polar equations. Students who enroll in this course will be prepared to take the AP Calculus BC exam in May."
-    }
-  ]
+    "type": "text",
+    "title": "Overview",
+    "text": "This course deals with the BC content of the AP curriculum beyond that of the Calculus AB sequence. Additional topics include sequences, infinite series, solutions of differential equations, advanced techniques of integration, as well as parametric and polar equations. Students who enroll in this course will be prepared to take the AP Calculus BC exam in May."
+  }, {
+    "type": "teachers",
+    "title": "Teachers"
+  }, {
+    "type": "numbered-list",
+    "title": "Objectives",
+    "list": ["Perform function and relation analysis using limits, continuity and derivatives.", "Demonstrate an understanding of the definition of limit and derivative, and apply the basic operation theorems of limits.  Determine the continuity of a function at a point.", "Calculate the derivative of a function both explicitly and implicitly.", "Use the derivative in such applications as: a. Maximum/minimum problems. b. Related rate problems. c. Graphing elementary functions. d. Approximation using tangent lines. e. Writing equations of tangent and normal lines.", "Determine the antiderivative of elementary functions, evaluate and approximate integrals including improper integrals, change Riemann sums to integrals, and solve elementary differential equations graphically and analytically.", "Find the value of a derivative and evaluate a definite integral using a calculator.Use the integral to find area, volume, total linear distance, average value of a function, and arc length.", "Find antiderivatives and evaluate integrals, including improper integrals.", "Set up and solve differential equations.", "Determine convergence and divergence of series.", "Find and use Power Series, Taylor Series and Taylor Polynomials.", "Analyze polar and vector functions."]
+  },{
+    "type": "grade-distribution",
+    "title": "Grade Distribution",
+    "categories": ["Tests & Quizzes", " Homework/ Presentation/ Group Work"],
+    "distribution": ["88-92", "8-12"]
+  }, {
+    "type": "links",
+    "title": "Textbook",
+    "links": ["http://a.co/bfJBrLw"],
+    "texts": ["Single Variable Calculus: Concepts and Contexts"],
+    "subtexts": ["4th Edition"],
+    "images": ["Calc_BC_Textbook.jpg"]
+  }]
 }

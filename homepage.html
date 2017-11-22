@@ -14,13 +14,18 @@ constants.homepage = {
     href: '#/calc-ab',
     duration: 'Full Year',
     grades: 'Grades: 11-12',
-    prerequisites: 'Prerequisites: Pre-Calc'
+    prerequisites: 'Prerequisites: Precalculus'
   }, {
     href: '#/calc-bc',
     duration: 'Full Year',
     grades: 'Grades: 11-12',
-    prerequisites: 'Prerequisites: Pre-Calc Honors'
+    prerequisites: 'Prerequisites: Precalculus Honors'
   }, {
+    href: '#/stats',
+    duration: 'Full Year',
+    grades: 'Grades: 11-12',
+    prerequisites: 'Prerequisites: Precalculus'
+  },{
     href: '#/apcsp',
     duration: 'Full Year',
     grades: 'Grades: 10-11-12',
@@ -44,8 +49,8 @@ constants.homepage = {
 
 // initialize name, teachers, and color of each course in order to ensure they match with index.html's
 constants.homepage.courses.forEach(function(course, index) {
-  var indexCourse = constants.pages.courses[course.href]
-  if(indexCourse) {
+  var indexCourse = constants.pages.courses[course.href];
+  if (indexCourse) {
     course.name = indexCourse.name;
     course.teachers = indexCourse.teachers;
     course.color = indexCourse.color;
@@ -93,6 +98,7 @@ constants.homepage.courses.forEach(function(course, index) {
   border-radius: 2px;
   text-decoration: none;
   display: block;
+  min-width: 250px; /*put in media query later*/
 }
 
 .homepage .course .container {
@@ -169,7 +175,7 @@ function initializeHome() {
 
     // initializes text for each text element in $course
     // matches the property names in the course object with the classes of each element
-    for(var property in course) {
+    for (var property in course) {
       $course.find('.' + property).text(course[property]);
     }
     // need to clear text of .teacher because previous statement unintentionally sets text of .teacher
@@ -197,6 +203,7 @@ function initializeHome() {
     $('body').append($card);
     var width = $card.width(), height = $card.height();
     $card.css({
+      position: 'absolute',
       top: $(this).offset().top,
       left: $(this).offset().left + $(this).width(),
       width: 0,

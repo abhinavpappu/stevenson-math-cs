@@ -1,0 +1,15 @@
+{
+  "blocks": [{
+    "type": "text",
+    "title": "Overview",
+    "text": "The purpose of the AP course in statistics is to introduce students to the major concepts and tools for collecting, analyzing, and drawing conclusions from data. Students are exposed to four broad conceptual themes: 1. Exploring Data: Describing patterns and departures from patterns. 2. Sampling and Experimentation: Planning and conducting a study. 3. Anticipating Patterns: Exploring random phenomena using probability and simulation. 4. Statistical Inference: Estimating population parameters and testing hypotheses. Students enrolled in this course are expected to write the Advanced Placement Statistics exam."
+  }, {
+    "type": "teachers",
+    "title": "Teachers"
+  }, {
+    "type": "grade-distribution",
+    "title": "Grade Distribution",
+    "categories": ["Tests", " Homework/Quizzes", "Classwork"],
+    "distribution": [60, 30, 10]
+  }]
+}

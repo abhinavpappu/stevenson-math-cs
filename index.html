@@ -61,6 +61,8 @@
     #head {
       padding: 100px;
       cursor: pointer;
+      display: block;
+      text-decoration: none;
     }
 
     #head .text {
@@ -177,8 +179,9 @@
       background-color: white;
       display: inline-block;
       border-radius: 2px;
-      position: absolute;
       overflow: hidden;
+      margin-right: 25px;
+      margin-bottom: 25px;
     }
 
     .teacher-card .container {
@@ -245,9 +248,9 @@
       </a>
     </div>
 
-    <div id="head">
+    <a id="head" href="">
       <div class="text"></div>
-    </div>
+    </a>
 
     <div id="loading-bar">
       <div class="bg"></div>
@@ -279,7 +282,7 @@
             teachers: ['Christian Thibaudeau', 'Bradley Habel']
           },
           '#/precalc-honors': {
-            name: 'Pre-Calc Honors',
+            name: 'Precalculus Honors',
             teachers: ['Paul Kim']
           },
           '#/calc-ab': {
@@ -289,6 +292,10 @@
           '#/calc-bc': {
             name: 'AP Calculus BC',
             teachers: ['Christian Thibaudeau', 'Robert Gammelgaard', 'Deborah Wiersema']
+          },
+          '#/stats': {
+            name: "AP Statistics",
+            teachers: ['Todd Sikora', "Paul Kim"]
           },
           '#/apcsp': {
             name: 'AP Computer Science Principles',
@@ -305,13 +312,34 @@
           email: 'cthibaudeau@d125.org',
           phone: 8474154624
         },
-        'Paul Kim': {},
-        'Robert Gammelgaard': {},
-        'Bradley Habel': {},
-        'Deborah Wiersema': {},
-        'Steven Svetlik': {},
-        'Michelle Zietlow': {},
-        'Todd Sikora': {}
+        'Paul Kim': {
+          email: 'pkim@d125.org',
+          phone: 8474154592
+        },
+        'Robert Gammelgaard': {
+          email: 'rgammelgaard@d125.org',
+          phone: 8474154583
+        },
+        'Bradley Habel': {
+          email: 'bhabel@d125.org',
+          phone: 8474154585
+        },
+        'Deborah Wiersema': {
+          email: 'dwiersema@d125.org',
+          phone: 8474154627
+        },
+        'Steven Svetlik': {
+          email: 'ssvetlik@d125.org',
+          phone: 8474154614
+        },
+        'Michelle Zietlow': {
+          email: 'mzietlow@d125.org',
+          phone: 8474154630
+        },
+        'Todd Sikora': {
+          email: 'tsikora@gmail.com',
+          phone: 8474154620
+        }
       },
       animations: { //any durations/delays for animations are stored here for easy modification
         ripple: {
@@ -340,6 +368,21 @@
         console.error(($element.length == 0)? "Template doesn't exist" : 'Multiple templates match the search query "' + query + '"');
       }
       return $element.clone();
+    }
+
+    function shadeColor(color, percent) {
+      if(color.indexOf('rgb') < 0 && color.indexOf('#') < 0) { // not rgb or hex, possibly css class
+        var $el = $('<div></div>').addClass(color).css('display', 'none');
+        $('body').append($el); // need to add to DOM before CSS color is assigned
+        color = $el.css('background-color');
+        $el.remove();
+      }
+      if(color.indexOf('rgb') == 0) { // converts from rgb to hex
+        var [r,g,b] = color.slice(4, -1).replace(/ /g,'').split(',').map(Number);
+        color="#" + ((1 << 24) + (r << 16) + (g << 8) + b).toString(16).slice(1);
+      }
+      var f=parseInt(color.slice(1),16),t=percent<0?0:255,p=percent<0?percent*-1:percent,R=f>>16,G=f>>8&0x00FF,B=f&0x0000FF;
+      return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
     }
 
     // loads homepage whenever #head is clicked
@@ -490,6 +533,7 @@
         $.get('courses/' + course.name.replace(/ /g, '_') + '.json').done(function(data) {
           data.color = course.color;
           data.name = course.name;
+          data.teachers = course.teachers;
           // ensures that the user has remained on the same page while the data was loading
           if (course === constants.pages.courses[location.hash]) {
             initializeCourse(data);
@@ -514,7 +558,7 @@
 
     function createTeacherCard(teacherName, color) {
       var $card = fromTemplate('.teacher-card');
-      $card.find('.image').css('background-image', 'url("pictures/'
+      $card.find('.image').css('background-image', 'url("images/'
         + (constants.teachers[teacherName].picture || color + '.jpg') + '")');
       $card.find('.name').text(teacherName);
 
