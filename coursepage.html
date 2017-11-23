@@ -28,7 +28,7 @@
 }
 
 .coursepage .teachers .teacher-card {
-  max-width: 350px;
+  max-width: 300px;
   min-width: 250px;
   flex: 1;
 }
@@ -200,10 +200,13 @@ function initializeCourse(courseData) {
             var $link = fromTemplate('.link');
             var [image, text, subtext] = [block.images[i], block.texts[i], block.subtexts[i]];
             if (link) $link.attr('href', link);
-            //if (image) $link.children('.image').css('background-image', 'url("images/' + image + '")');
             if (image) $link.children('img').attr('src', `images/${image}`);
             if (text) $link.children('.text').text(text);
             if (subtext) $link.children('.subtext').text(subtext);
+            if(!image && !text && !subtext) {
+              // if image, text, and subtext are not specified, the link card would not have any height, so link address is set as the text
+              $link.children('.text').text(link);
+            }
             $links.append($link);
           });
           $block.append($links);
