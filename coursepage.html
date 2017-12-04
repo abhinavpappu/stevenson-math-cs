@@ -87,6 +87,7 @@
 
 .link img {
   width: 100%;
+  display: block;
 }
 
 .link .text {
@@ -102,6 +103,11 @@
   font-size: .9em;
   color: #616161;
   margin-bottom: 10px;
+}
+
+/* Hides text and subtext if they are empty in order to allow image to use the full height of card */
+.link .text:empty, .link .subtext:empty {
+  display: none;
 }
 </style>
 

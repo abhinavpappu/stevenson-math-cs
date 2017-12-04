@@ -64,7 +64,7 @@ constants.homepage.courses.forEach(function(course, index) {
 /* Everything that would be inside homepage must be explicitly declared as a
   descendant of .homepage just in case other pages use the same classes */
 
-.homepage{
+.homepage {
   margin: 50px;
   display: none; /*will show using javascript after everything is initialized*/
 }
@@ -317,9 +317,7 @@ function initializeHome() {
             duration: params.duration3,
             complete: function() {
               $course.remove();
-
-              // points URL to selected course's page
-              location.href = location.origin + location.pathname + $(this).attr('href');
+              setPage($(this).attr('href'));
             }
           });
 

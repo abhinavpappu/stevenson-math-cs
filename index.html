@@ -60,9 +60,18 @@
 
     #head {
       padding: 100px;
-      cursor: pointer;
       display: block;
       text-decoration: none;
+    }
+
+    #head .back {
+      position: absolute;
+      top: 5px;
+      left: 5px;
+      color: white;
+      font-size: 1.2em;
+      padding: 10px 14px;
+      border-radius: 100px;
     }
 
     #head .text {
@@ -248,9 +257,12 @@
       </a>
     </div>
 
-    <a id="head" href="">
+    <div id="head">
+      <a class="back ripple-enabled" href="/#">
+        <i class="fa fa-arrow-left"></i>
+      </a>
       <div class="text"></div>
-    </a>
+    </div>
 
     <div id="loading-bar">
       <div class="bg"></div>
@@ -307,7 +319,7 @@
           }
         }
       },
-      teachers: { //TODO: Organize alphabetically
+      teachers: { //TODO: Organize alphabetically to make editing easier later
         'Christian Thibaudeau': {
           email: 'cthibaudeau@d125.org',
           phone: 8474154624
@@ -385,11 +397,6 @@
       return "#"+(0x1000000+(Math.round((t-R)*p)+R)*0x10000+(Math.round((t-G)*p)+G)*0x100+(Math.round((t-B)*p)+B)).toString(16).slice(1);
     }
 
-    // loads homepage whenever #head is clicked
-    $("#head").click(function() {
-      location.href = location.origin + location.pathname;
-    });
-
     /**
      * shows or hides the loading bar set to the specified color
      * the color is maintained from any previous color changes
@@ -418,6 +425,14 @@
         $('#loading-bar').css('display', '');
       }
     }
+
+    // overrides normal a behavior to allow time for ripple animation to occur before page loads
+    $('#head .back').click(function() {
+      setTimeout(function() {
+        setPage('#');
+      }, 200);
+      return false;
+    });
 
     // calls the function load when page is ready
     $(function() {
@@ -454,10 +469,15 @@
       });
     }
 
+    function setPage(page) {
+      location.href = location.origin + location.pathname + page;
+    }
 
     /**
      * loads a page using the specified page
-     * if unspecified, uses URL to determine desired page
+     * if page is unspecified, uses URL to determine desired page
+     * NOTE: Does not change the URL to match page if the page is specified, so if
+     *  the user reloads, the previous page will be loaded, use setPage() to modify URL
      *
      * @param  {String} [page]  the hash portion of the URL of desired page (look at keys defined in constants.pages)
      */
@@ -495,6 +515,7 @@
      */
     function loadHome(data, callback) {
       $('#head').addClass(constants.color);
+      $('#head .back').css('display', 'none');
       $('#head .text').text(constants.title);
 
       loadingBar(true, constants.color);
@@ -522,6 +543,7 @@
      */
     function loadCourse(course, callback) {
       $('#head').addClass(course.color);
+      $('#head .back').css('display', 'block');
       $('#head .text').text(course.name);
 
       loadingBar(true, course.color);
